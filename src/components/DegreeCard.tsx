@@ -1,5 +1,5 @@
 
-import { Degree } from "@/data/mockData";
+import { Degree } from "@/types/degree";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";

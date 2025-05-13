@@ -1,17 +1,19 @@
 
-import { College, degrees } from "@/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { College } from "@/types/college";
+import { Degree } from "@/types/degree";
 
 interface CollegeCardProps {
   college: College;
+  degrees: Degree[];
 }
 
-export function CollegeCard({ college }: CollegeCardProps) {
+export function CollegeCard({ college, degrees }: CollegeCardProps) {
   const degreesOffered = college.degreesOffered.map(
     (id) => degrees.find((degree) => degree.id === id)?.name || ""
-  );
+  ).filter(name => name !== "");
 
   return (
     <Link to={`/colleges/${college.id}`}>

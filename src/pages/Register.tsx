@@ -8,39 +8,74 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { degrees } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
+import { registerStudent } from "@/api/students";
+import { fetchDegrees } from "@/api/degrees";
+import { useEffect } from "react";
+import { Degree } from "@/types/degree";
 
 const Register = () => {
   const { toast } = useToast();
+  const [degrees, setDegrees] = useState<Degree[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
+    confirmPassword: "",
     phone: "",
     school: "",
     city: "",
     state: "",
     pucStream: "",
     pucPercentage: "",
-    interestedDegree: "",
-    message: "",
+    preferredDegree: "",
+    notes: "",
     agreeToTerms: false,
   });
 
   const [formErrors, setFormErrors] = useState({
     name: false,
     email: false,
+    password: false,
+    confirmPassword: false,
     phone: false,
     pucStream: false,
+    pucPercentage: false,
     agreeToTerms: false,
   });
+
+  useEffect(() => {
+    const loadDegrees = async () => {
+      try {
+        const data = await fetchDegrees();
+        setDegrees(data);
+      } catch (error) {
+        console.error("Error loading degrees:", error);
+        toast({
+          title: "Error loading data",
+          description: "Could not load degree programs. Some options may not be available.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDegrees();
+  }, [toast]);
 
   const validateForm = () => {
     const errors = {
       name: formData.name.trim() === "",
       email: !/\S+@\S+\.\S+/.test(formData.email),
+      password: formData.password.length < 6,
+      confirmPassword: formData.password !== formData.confirmPassword,
       phone: !/^[0-9]{10}$/.test(formData.phone),
       pucStream: formData.pucStream === "",
+      pucPercentage: formData.pucPercentage === "" || isNaN(Number(formData.pucPercentage)) || Number(formData.pucPercentage) < 0 || Number(formData.pucPercentage) > 100,
       agreeToTerms: !formData.agreeToTerms,
     };
     
@@ -57,32 +92,60 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      // In a real application, this would send data to a server
-      console.log("Form data submitted:", formData);
-      
-      toast({
-        title: "Registration Successful!",
-        description: "Thank you for registering. We will contact you with more information about your educational options.",
-      });
-      
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        school: "",
-        city: "",
-        state: "",
-        pucStream: "",
-        pucPercentage: "",
-        interestedDegree: "",
-        message: "",
-        agreeToTerms: false,
-      });
+      try {
+        setSubmitting(true);
+        
+        // Create registration data
+        const studentData = {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          pucStream: formData.pucStream,
+          pucPercentage: Number(formData.pucPercentage),
+          preferredDegree: formData.preferredDegree || undefined,
+          preferredLocation: formData.city ? `${formData.city}, ${formData.state}` : undefined,
+          notes: formData.notes || undefined
+        };
+        
+        // Send registration to API
+        await registerStudent(studentData);
+        
+        toast({
+          title: "Registration Successful!",
+          description: "Thank you for registering. We will contact you with more information about your educational options.",
+        });
+        
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          phone: "",
+          school: "",
+          city: "",
+          state: "",
+          pucStream: "",
+          pucPercentage: "",
+          preferredDegree: "",
+          notes: "",
+          agreeToTerms: false,
+        });
+      } catch (error) {
+        console.error("Registration failed:", error);
+        toast({
+          title: "Registration Failed",
+          description: "There was an error during registration. Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setSubmitting(false);
+      }
     } else {
       toast({
         title: "Form has errors",
@@ -139,6 +202,34 @@ const Register = () => {
                         className={formErrors.email ? "border-red-500" : ""}
                       />
                       {formErrors.email && <p className="text-red-500 text-sm">Please enter a valid email</p>}
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="Create a password"
+                        value={formData.password}
+                        onChange={(e) => handleChange("password", e.target.value)}
+                        className={formErrors.password ? "border-red-500" : ""}
+                      />
+                      {formErrors.password && <p className="text-red-500 text-sm">Password must be at least 6 characters</p>}
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="Confirm your password"
+                        value={formData.confirmPassword}
+                        onChange={(e) => handleChange("confirmPassword", e.target.value)}
+                        className={formErrors.confirmPassword ? "border-red-500" : ""}
+                      />
+                      {formErrors.confirmPassword && <p className="text-red-500 text-sm">Passwords do not match</p>}
                     </div>
                   </div>
                   
@@ -215,21 +306,24 @@ const Register = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="pucPercentage">PUC Percentage/CGPA</Label>
+                      <Label htmlFor="pucPercentage">PUC Percentage/CGPA <span className="text-red-500">*</span></Label>
                       <Input
                         id="pucPercentage"
                         placeholder="Your PUC percentage or CGPA"
                         value={formData.pucPercentage}
                         onChange={(e) => handleChange("pucPercentage", e.target.value)}
+                        className={formErrors.pucPercentage ? "border-red-500" : ""}
                       />
+                      {formErrors.pucPercentage && <p className="text-red-500 text-sm">Please enter a valid percentage (0-100)</p>}
                     </div>
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="interestedDegree">Interested Degree Program</Label>
+                    <Label htmlFor="preferredDegree">Interested Degree Program</Label>
                     <Select
-                      value={formData.interestedDegree}
-                      onValueChange={(value) => handleChange("interestedDegree", value)}
+                      value={formData.preferredDegree}
+                      onValueChange={(value) => handleChange("preferredDegree", value)}
+                      disabled={loading}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a degree you're interested in (optional)" />
@@ -248,12 +342,12 @@ const Register = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="message">Additional Information</Label>
+                    <Label htmlFor="notes">Additional Information</Label>
                     <Textarea
-                      id="message"
+                      id="notes"
                       placeholder="Any specific questions or information you'd like to share"
-                      value={formData.message}
-                      onChange={(e) => handleChange("message", e.target.value)}
+                      value={formData.notes}
+                      onChange={(e) => handleChange("notes", e.target.value)}
                       className="min-h-[100px]"
                     />
                   </div>
@@ -280,8 +374,12 @@ const Register = () => {
                   </div>
                 </div>
                 
-                <Button type="submit" className="w-full bg-edu-primary hover:bg-edu-dark">
-                  Submit Registration
+                <Button 
+                  type="submit" 
+                  className="w-full bg-edu-primary hover:bg-edu-dark"
+                  disabled={submitting}
+                >
+                  {submitting ? "Submitting..." : "Submit Registration"}
                 </Button>
               </form>
             </Card>

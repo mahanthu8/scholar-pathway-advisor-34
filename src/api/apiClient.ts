@@ -2,7 +2,7 @@
 // Base API client for making requests to the backend
 
 // API base URL - would come from environment variables in production
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:8080';
 
 // Request options type
 type RequestOptions = {

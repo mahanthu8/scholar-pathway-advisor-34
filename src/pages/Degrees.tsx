@@ -2,14 +2,42 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { DegreeCard } from "@/components/DegreeCard";
-import { degrees } from "@/data/mockData";
+import { fetchDegrees } from "@/api/degrees";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { Degree } from "@/types/degree";
 
 const Degrees = () => {
+  const { toast } = useToast();
+  const [degrees, setDegrees] = useState<Degree[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [filteredDegrees, setFilteredDegrees] = useState(degrees);
+  const [filteredDegrees, setFilteredDegrees] = useState<Degree[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load degrees data
+  useEffect(() => {
+    const loadDegrees = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchDegrees();
+        setDegrees(data);
+        setFilteredDegrees(data);
+      } catch (error) {
+        console.error("Error loading degrees:", error);
+        toast({
+          title: "Error loading data",
+          description: "Could not load degree programs. Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDegrees();
+  }, [toast]);
 
   // Get unique categories from degrees
   const categories = Array.from(new Set(degrees.map((degree) => degree.category)));
@@ -23,7 +51,7 @@ const Degrees = () => {
       return matchesSearch && matchesCategory;
     });
     setFilteredDegrees(filtered);
-  }, [searchTerm, categoryFilter]);
+  }, [searchTerm, categoryFilter, degrees]);
 
   return (
     <Layout>
@@ -73,7 +101,11 @@ const Degrees = () => {
 
       <section className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredDegrees.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500 text-lg">Loading degrees...</p>
+            </div>
+          ) : filteredDegrees.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredDegrees.map((degree) => (
                 <DegreeCard key={degree.id} degree={degree} />

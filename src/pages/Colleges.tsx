@@ -2,21 +2,56 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { CollegeCard } from "@/components/CollegeCard";
-import { colleges, degrees } from "@/data/mockData";
+import { fetchColleges } from "@/api/colleges";
+import { fetchDegrees, fetchDegreeNames } from "@/api/degrees";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { College } from "@/types/college";
+import { Degree } from "@/types/degree";
 
 const Colleges = () => {
+  const { toast } = useToast();
+  const [colleges, setColleges] = useState<College[]>([]);
+  const [degrees, setDegrees] = useState<Degree[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [degreeFilter, setDegreeFilter] = useState(0);
-  const [filteredColleges, setFilteredColleges] = useState(colleges);
+  const [filteredColleges, setFilteredColleges] = useState<College[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Get unique locations from colleges
   const locations = Array.from(new Set(colleges.map((college) => {
     const city = college.location.split(",")[0].trim();
     return city;
   })));
+
+  // Load colleges and degrees
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [collegesData, degreesData] = await Promise.all([
+          fetchColleges(),
+          fetchDegrees()
+        ]);
+        setColleges(collegesData);
+        setDegrees(degreesData);
+        setFilteredColleges(collegesData);
+      } catch (error) {
+        console.error("Error loading data:", error);
+        toast({
+          title: "Error loading data",
+          description: "Could not load colleges and degrees. Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [toast]);
 
   // Filter colleges when search term or filters change
   useEffect(() => {
@@ -32,7 +67,7 @@ const Colleges = () => {
       return matchesSearch && matchesLocation && matchesDegree;
     });
     setFilteredColleges(filtered);
-  }, [searchTerm, locationFilter, degreeFilter]);
+  }, [searchTerm, locationFilter, degreeFilter, colleges]);
 
   return (
     <Layout>
@@ -102,10 +137,14 @@ const Colleges = () => {
 
       <section className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredColleges.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500 text-lg">Loading colleges...</p>
+            </div>
+          ) : filteredColleges.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredColleges.map((college) => (
-                <CollegeCard key={college.id} college={college} />
+                <CollegeCard key={college.id} college={college} degrees={degrees} />
               ))}
             </div>
           ) : (
