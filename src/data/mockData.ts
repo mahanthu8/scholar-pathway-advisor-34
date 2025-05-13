@@ -1,4 +1,3 @@
-
 export interface Degree {
   id: number;
   name: string;
@@ -252,5 +251,75 @@ export const colleges: College[] = [
     degreesOffered: [2, 4, 6, 8],
     description: "A prestigious institution known for its excellence in humanities, sciences, and commerce education.",
     imageUrl: "https://via.placeholder.com/400x300?text=Loyola+College"
+  },
+  {
+    id: 9,
+    name: "RV College of Engineering",
+    location: "Bangalore, Karnataka",
+    rating: 4.6,
+    fees: "₹1,00,000 - ₹3,00,000 per year",
+    degreesOffered: [1, 7],
+    description: "One of the top engineering colleges in Bangalore with strong industry connections and modern infrastructure.",
+    imageUrl: "https://via.placeholder.com/400x300?text=RV+College+of+Engineering"
+  },
+  {
+    id: 10,
+    name: "PES University",
+    location: "Bangalore, Karnataka",
+    rating: 4.7,
+    fees: "₹1,50,000 - ₹3,50,000 per year",
+    degreesOffered: [1, 5, 7],
+    description: "A renowned institution focused on providing quality education in engineering, medicine, and management studies.",
+    imageUrl: "https://via.placeholder.com/400x300?text=PES+University"
+  },
+  {
+    id: 11,
+    name: "BMS College of Engineering",
+    location: "Bangalore, Karnataka",
+    rating: 4.5,
+    fees: "₹90,000 - ₹2,80,000 per year",
+    degreesOffered: [1, 7],
+    description: "One of the oldest engineering colleges in Karnataka with strong alumni network and industry partnerships.",
+    imageUrl: "https://via.placeholder.com/400x300?text=BMS+College+of+Engineering"
+  },
+  {
+    id: 12,
+    name: "Mount Carmel College",
+    location: "Bangalore, Karnataka",
+    rating: 4.3,
+    fees: "₹40,000 - ₹1,20,000 per year",
+    degreesOffered: [2, 4, 6, 8],
+    description: "A premier women's college offering various undergraduate and postgraduate programs in arts, science, and commerce.",
+    imageUrl: "https://via.placeholder.com/400x300?text=Mount+Carmel+College"
+  },
+  {
+    id: 13,
+    name: "MS Ramaiah Institute of Technology",
+    location: "Bangalore, Karnataka",
+    rating: 4.5,
+    fees: "₹1,00,000 - ₹3,00,000 per year",
+    degreesOffered: [1, 7],
+    description: "A top engineering institute known for its cutting-edge research and industry-focused curriculum.",
+    imageUrl: "https://via.placeholder.com/400x300?text=MS+Ramaiah+Institute"
+  },
+  {
+    id: 14,
+    name: "Bangalore Medical College",
+    location: "Bangalore, Karnataka",
+    rating: 4.7,
+    fees: "₹1,80,000 - ₹5,00,000 per year",
+    degreesOffered: [3],
+    description: "One of the premier medical colleges in South India with excellent clinical exposure and research opportunities.",
+    imageUrl: "https://via.placeholder.com/400x300?text=Bangalore+Medical+College"
+  },
+  {
+    id: 15,
+    name: "St. Joseph's College",
+    location: "Bangalore, Karnataka",
+    rating: 4.4,
+    fees: "₹30,000 - ₹1,10,000 per year",
+    degreesOffered: [4, 5, 6, 8],
+    description: "A renowned college offering various undergraduate and postgraduate programs with a focus on holistic development.",
+    imageUrl: "https://via.placeholder.com/400x300?text=St+Joseph's+College"
   }
 ];
