@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { Instagram, Facebook, Twitter } from "lucide-react";
 
 export function Footer() {
   return (
@@ -67,19 +68,13 @@ export function Footer() {
             </p>
             <div className="flex space-x-4 mt-4">
               <a href="#" className="text-edu-primary hover:text-edu-dark">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-                </svg>
+                <Facebook size={20} />
               </a>
               <a href="#" className="text-edu-primary hover:text-edu-dark">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.82 7.489h-1.908c-.161 0-.338.172-.338.399V11h2.237l-.259 2.301h-1.978v6.161h-2.79v-6.16H9.757V11h2.026V9.967c0-1.966 1.362-3.03 3.329-3.03.94 0 1.75.07 1.989.1v2.399l-.281.053z"></path>
-                </svg>
+                <Twitter size={20} />
               </a>
               <a href="#" className="text-edu-primary hover:text-edu-dark">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.957 7.571h-1.908c-.161 0-.338.172-.338.399V11h2.237l-.259 2.301h-1.978v6.161h-2.79v-6.16H9.757V11h2.026V9.967c0-1.966 1.362-3.03 3.329-3.03.94 0 1.75.07 1.989.1v2.399l-.144.135z"></path>
-                </svg>
+                <Instagram size={20} />
               </a>
             </div>
           </div>
