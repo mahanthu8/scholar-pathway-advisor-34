@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Home } from "lucide-react";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -19,6 +20,10 @@ export function Header() {
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/" className="text-gray-700 hover:text-edu-primary transition-colors flex items-center gap-1">
+              <Home className="h-4 w-4" />
+              <span>Home</span>
+            </Link>
             <Link to="/degrees" className="text-gray-700 hover:text-edu-primary transition-colors">
               Degrees
             </Link>
@@ -74,6 +79,14 @@ export function Header() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-b border-gray-200 animate-fade-in">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <Link
+              to="/"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-edu-primary hover:bg-gray-50 flex items-center gap-2"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Home className="h-4 w-4" />
+              <span>Home</span>
+            </Link>
             <Link
               to="/degrees"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-edu-primary hover:bg-gray-50"
