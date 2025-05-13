@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from "react";
 import { Layout } from "@/components/Layout";
 import { CollegeCard } from "@/components/CollegeCard";
@@ -13,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { College } from "@/types/college";
 import { Degree } from "@/types/degree";
 import { MapPin, GraduationCap, Star, Filter } from "lucide-react";
-import { getColleges, getDegrees, getFeaturedColleges, getBangaloreColleges } from "@/utils/mockDataFallback";
+import { getColleges, getDegrees, getFeaturedColleges, getBangaloreColleges, getKarnatakaColleges } from "@/utils/mockDataFallback";
 import { StudentEligibilityForm, StudentDetails } from "@/components/StudentEligibilityForm";
 import { getEligibleDegrees, getEligibleColleges } from "@/utils/eligibilityFilter";
 
@@ -35,6 +34,13 @@ const Colleges = () => {
   const [studentDetails, setStudentDetails] = useState<StudentDetails | null>(null);
   const [eligibleDegrees, setEligibleDegrees] = useState<Degree[]>([]);
   const [findingMatches, setFindingMatches] = useState(false);
+
+  // Add a new tab for Karnataka colleges
+  const tabs = [
+    { id: "all", label: "All Colleges" },
+    { id: "bangalore", label: "Bangalore Colleges" },
+    { id: "karnataka", label: "Karnataka Colleges" }
+  ];
 
   // Get unique locations from colleges
   const locations = useMemo(() => {
@@ -59,11 +65,16 @@ const Colleges = () => {
       try {
         setLoading(true);
         
-        // Using our fallback utility to get data with mock data as fallback
-        const [collegesData, degreesData] = await Promise.all([
-          getColleges(fetchColleges),
-          getDegrees(fetchDegrees)
-        ]);
+        let collegesData;
+        if (activeTab === "bangalore") {
+          collegesData = await getBangaloreColleges();
+        } else if (activeTab === "karnataka") {
+          collegesData = await getKarnatakaColleges();
+        } else {
+          collegesData = await getColleges();
+        }
+        
+        const degreesData = await getDegrees(fetchDegrees);
         
         setColleges(collegesData);
         setDegrees(degreesData);
@@ -81,7 +92,7 @@ const Colleges = () => {
     };
 
     fetchData();
-  }, [toast]);
+  }, [toast, activeTab]);
 
   // Handle student eligibility form submission
   const handleEligibilitySubmit = (details: StudentDetails) => {
@@ -171,10 +182,10 @@ const Colleges = () => {
               Find Your Perfect College
             </h1>
             <p className="text-lg mb-8 opacity-90">
-              Explore colleges offering various degree programs with a special focus on institutions in Bangalore.
+              Explore colleges offering various degree programs across Karnataka with a special focus on institutions in Bangalore.
             </p>
             
-            {/* New toggle for switching between normal search and eligibility-based search */}
+            {/* Toggle between normal search and eligibility-based search */}
             <div className="flex justify-center mb-6">
               <div className="inline-flex rounded-md shadow-sm">
                 <Button 
@@ -197,12 +208,14 @@ const Colleges = () => {
             {!isEligibilityMode ? (
               <>
                 <Tabs defaultValue="all" className="w-full mb-8" onValueChange={setActiveTab}>
-                  <TabsList className="grid w-full grid-cols-2 mb-6">
-                    <TabsTrigger value="all">All Colleges</TabsTrigger>
-                    <TabsTrigger value="bangalore">Bangalore Colleges</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3 mb-6">
+                    {tabs.map(tab => (
+                      <TabsTrigger key={tab.id} value={tab.id}>{tab.label}</TabsTrigger>
+                    ))}
                   </TabsList>
                 </Tabs>
                 
+                {/* Search and filter UI */}
                 <div className="bg-white rounded-lg p-4 shadow-lg">
                   <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="w-full md:w-2/3">
@@ -358,6 +371,7 @@ const Colleges = () => {
 
       <section className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Eligibility mode header */}
           {isEligibilityMode && studentDetails && (
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
@@ -377,6 +391,7 @@ const Colleges = () => {
             </div>
           )}
           
+          {/* Bangalore colleges header */}
           {activeTab === "bangalore" && !isEligibilityMode && (
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
@@ -390,6 +405,21 @@ const Colleges = () => {
             </div>
           )}
           
+          {/* Karnataka colleges header */}
+          {activeTab === "karnataka" && !isEligibilityMode && (
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Engineering Colleges in Karnataka</h2>
+                <Badge className="bg-edu-secondary px-3 py-1">{filteredColleges.length} Institutions</Badge>
+              </div>
+              <p className="text-gray-600">
+                Karnataka is home to numerous prestigious engineering institutions spread across cities like Bangalore, 
+                Mysuru, Mangaluru, and more. These colleges offer a wide range of engineering and technical programs.
+              </p>
+            </div>
+          )}
+          
+          {/* Loading or colleges display */}
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-edu-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
