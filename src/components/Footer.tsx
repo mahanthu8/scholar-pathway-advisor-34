@@ -60,10 +60,10 @@ export function Footer() {
           <div>
             <h4 className="font-medium text-gray-900 mb-4">Contact</h4>
             <p className="text-gray-600 text-sm mb-2">
-              Email: info@edupathfinder.com
+              Email: ananyama09@gmail.com
             </p>
             <p className="text-gray-600 text-sm">
-              Phone: +91 9876543210
+              Phone: +91 8618714564
             </p>
             <div className="flex space-x-4 mt-4">
               <a href="#" className="text-edu-primary hover:text-edu-dark">
