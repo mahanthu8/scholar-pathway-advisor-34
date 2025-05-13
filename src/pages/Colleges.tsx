@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Layout } from "@/components/Layout";
 import { CollegeCard } from "@/components/CollegeCard";
-import { fetchColleges } from "@/api/colleges";
+import { fetchColleges, fetchFeaturedColleges, fetchBangaloreColleges } from "@/api/colleges";
 import { fetchDegrees } from "@/api/degrees";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,7 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { College } from "@/types/college";
 import { Degree } from "@/types/degree";
-import { MapPin, GraduationCap, Star, IndianRupee, Filter } from "lucide-react";
+import { MapPin, GraduationCap, Star, Filter } from "lucide-react";
+import { getColleges, getDegrees, getFeaturedColleges, getBangaloreColleges } from "@/utils/mockDataFallback";
 
 const Colleges = () => {
   const { toast } = useToast();
@@ -49,19 +50,22 @@ const Colleges = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        
+        // Using our fallback utility to get data with mock data as fallback
         const [collegesData, degreesData] = await Promise.all([
-          fetchColleges(),
-          fetchDegrees()
+          getColleges(fetchColleges),
+          getDegrees(fetchDegrees)
         ]);
+        
         setColleges(collegesData);
         setDegrees(degreesData);
         setFilteredColleges(collegesData);
       } catch (error) {
         console.error("Error loading data:", error);
         toast({
-          title: "Error loading data",
-          description: "Could not load colleges and degrees. Please try again later.",
-          variant: "destructive",
+          title: "Notice",
+          description: "Using mock data since the API server is not available.",
+          variant: "default",
         });
       } finally {
         setLoading(false);

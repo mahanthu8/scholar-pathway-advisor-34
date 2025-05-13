@@ -7,12 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Degree } from "@/types/degree";
+import { getDegrees } from "@/utils/mockDataFallback";
 
 const Degrees = () => {
   const { toast } = useToast();
   const [degrees, setDegrees] = useState<Degree[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all"); // Changed from empty string to "all"
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [filteredDegrees, setFilteredDegrees] = useState<Degree[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,15 +22,16 @@ const Degrees = () => {
     const loadDegrees = async () => {
       try {
         setLoading(true);
-        const data = await fetchDegrees();
+        // Using our fallback utility to get data with mock data as fallback
+        const data = await getDegrees(fetchDegrees);
         setDegrees(data);
         setFilteredDegrees(data);
       } catch (error) {
         console.error("Error loading degrees:", error);
         toast({
-          title: "Error loading data",
-          description: "Could not load degree programs. Please try again later.",
-          variant: "destructive",
+          title: "Notice",
+          description: "Using mock data since the API server is not available.",
+          variant: "default",
         });
       } finally {
         setLoading(false);
@@ -47,7 +49,7 @@ const Degrees = () => {
     const filtered = degrees.filter((degree) => {
       const matchesSearch = degree.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         degree.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = categoryFilter === "all" || degree.category === categoryFilter; // Updated to use "all" instead of empty string
+      const matchesCategory = categoryFilter === "all" || degree.category === categoryFilter;
       return matchesSearch && matchesCategory;
     });
     setFilteredDegrees(filtered);
@@ -103,7 +105,8 @@ const Degrees = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">Loading degrees...</p>
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-edu-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+              <p className="text-gray-500 text-lg mt-4">Loading degrees...</p>
             </div>
           ) : filteredDegrees.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
