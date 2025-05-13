@@ -1,9 +1,11 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { College } from "@/types/college";
 import { Degree } from "@/types/degree";
 import { MapPin, GraduationCap, Star } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface CollegeCardProps {
   college: College;
@@ -44,12 +46,14 @@ export function CollegeCard({ college, degrees = [] }: CollegeCardProps) {
   return (
     <Link to={`/colleges/${college.id}`}>
       <Card className={`h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-gray-200 ${college.isFeatured ? 'ring-2 ring-edu-primary ring-offset-2' : ''}`}>
-        <div className="relative h-48 overflow-hidden">
-          <img
-            src={college.imageUrl}
-            alt={college.name}
-            className="w-full h-full object-cover"
-          />
+        <div className="relative overflow-hidden">
+          <AspectRatio ratio={16 / 10}>
+            <img
+              src={college.imageUrl}
+              alt={college.name}
+              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            />
+          </AspectRatio>
           {isBangaloreCollege && (
             <Badge className="absolute top-3 right-3 bg-edu-primary text-white">
               Bangalore
