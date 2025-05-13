@@ -12,7 +12,7 @@ const Degrees = () => {
   const { toast } = useToast();
   const [degrees, setDegrees] = useState<Degree[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all"); // Changed from empty string to "all"
   const [filteredDegrees, setFilteredDegrees] = useState<Degree[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,7 +47,7 @@ const Degrees = () => {
     const filtered = degrees.filter((degree) => {
       const matchesSearch = degree.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         degree.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = categoryFilter === "" || degree.category === categoryFilter;
+      const matchesCategory = categoryFilter === "all" || degree.category === categoryFilter; // Updated to use "all" instead of empty string
       return matchesSearch && matchesCategory;
     });
     setFilteredDegrees(filtered);
@@ -84,7 +84,7 @@ const Degrees = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="">All Categories</SelectItem>
+                      <SelectItem value="all">All Categories</SelectItem>
                       {categories.map((category) => (
                         <SelectItem key={category} value={category}>
                           {category}

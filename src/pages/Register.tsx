@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
@@ -330,7 +329,7 @@ const Register = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="">Not sure yet</SelectItem>
+                          <SelectItem value="none">Not sure yet</SelectItem>
                           {degrees.map((degree) => (
                             <SelectItem key={degree.id} value={degree.id.toString()}>
                               {degree.name}
