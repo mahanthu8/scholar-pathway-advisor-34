@@ -5,10 +5,58 @@ import { degrees, colleges } from "@/data/mockData";
 import { DegreeCard } from "@/components/DegreeCard";
 import { CollegeCard } from "@/components/CollegeCard";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { StudentEligibilityForm, StudentDetails } from "@/components/StudentEligibilityForm";
+import { getEligibleDegrees } from "@/utils/eligibilityFilter";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const featuredDegrees = degrees.slice(0, 4);
   const featuredColleges = colleges.slice(0, 3);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [findingMatches, setFindingMatches] = useState(false);
+  const [eligibleDegrees, setEligibleDegrees] = useState<typeof degrees>([]);
+  const [matchingColleges, setMatchingColleges] = useState<typeof colleges>([]);
+  const { toast } = useToast();
+
+  const handleEligibilitySubmit = (details: StudentDetails) => {
+    setFindingMatches(true);
+    
+    setTimeout(() => {
+      // Find eligible degrees based on student details
+      const eligible = getEligibleDegrees(degrees, details);
+      setEligibleDegrees(eligible);
+      
+      // Get IDs of eligible degrees
+      const eligibleDegreeIds = eligible.map(degree => degree.id);
+      
+      // Filter colleges that offer eligible degrees and match location preference
+      const matching = colleges.filter(college => {
+        const offersEligibleDegree = college.degreesOffered.some(degreeId => 
+          eligibleDegreeIds.includes(degreeId)
+        );
+        
+        const locationMatches = !details.preferredLocation || 
+          college.location.toLowerCase().includes(details.preferredLocation.toLowerCase());
+        
+        return offersEligibleDegree && locationMatches;
+      });
+      
+      setMatchingColleges(matching);
+      setFindingMatches(false);
+      
+      toast({
+        title: "Results Found",
+        description: `Found ${matching.length} colleges and ${eligible.length} degree programs matching your profile.`,
+      });
+      
+      setIsDialogOpen(false);
+      
+      // Scroll to the results section
+      document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
+    }, 1000); // Simulate processing time
+  };
 
   return (
     <Layout>
@@ -24,20 +72,58 @@ const Index = () => {
               tailored to your interests and qualifications.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/degrees">
-                <Button size="lg" className="bg-white text-edu-primary hover:bg-gray-100">
-                  Explore Degrees
-                </Button>
-              </Link>
-              <Link to="/register">
-                <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/20">
-                  Register Now
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                className="bg-white text-edu-primary hover:bg-gray-100"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                Find
+              </Button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Results Section - Only shows after submitting the form */}
+      {(eligibleDegrees.length > 0 || matchingColleges.length > 0) && (
+        <section className="py-16 bg-gray-50" id="results-section">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Your Personalized Academic Matches</h2>
+            
+            {eligibleDegrees.length > 0 && (
+              <div className="mb-12">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-bold text-gray-800">Recommended Degree Programs</h3>
+                  <Link to="/degrees" className="text-edu-primary hover:underline">
+                    View All
+                  </Link>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {eligibleDegrees.slice(0, 4).map((degree) => (
+                    <DegreeCard key={degree.id} degree={degree} />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {matchingColleges.length > 0 && (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-bold text-gray-800">Matching Colleges</h3>
+                  <Link to="/colleges" className="text-edu-primary hover:underline">
+                    View All
+                  </Link>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {matchingColleges.slice(0, 3).map((college) => (
+                    <CollegeCard key={college.id} college={college} degrees={degrees} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Featured Degrees */}
       <section className="py-16 bg-gray-50">
@@ -173,16 +259,34 @@ const Index = () => {
               Ready to Find Your Perfect Academic Path?
             </h2>
             <p className="text-xl mb-8">
-              Register for personalized degree and college recommendations tailored to your interests and qualifications.
+              Enter your academic details to get personalized degree and college recommendations tailored to your profile.
             </p>
-            <Link to="/register">
-              <Button size="lg" className="bg-white text-edu-primary hover:bg-gray-100">
-                Register Now
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              className="bg-white text-edu-primary hover:bg-gray-100"
+              onClick={() => setIsDialogOpen(true)}
+            >
+              Find Courses & Colleges
+            </Button>
           </div>
         </div>
       </section>
+
+      {/* Dialog for Student Eligibility Form */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Enter Your Academic Details</DialogTitle>
+            <DialogDescription>
+              Provide your PUC stream and percentage to find courses and colleges that match your profile.
+            </DialogDescription>
+          </DialogHeader>
+          <StudentEligibilityForm
+            onSubmit={handleEligibilitySubmit}
+            isLoading={findingMatches}
+          />
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
