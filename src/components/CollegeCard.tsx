@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -44,7 +43,7 @@ export function CollegeCard({ college, degrees = [] }: CollegeCardProps) {
 
   return (
     <Link to={`/colleges/${college.id}`}>
-      <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-gray-200">
+      <Card className={`h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-gray-200 ${college.isFeatured ? 'ring-2 ring-edu-primary ring-offset-2' : ''}`}>
         <div className="relative h-48 overflow-hidden">
           <img
             src={college.imageUrl}
@@ -54,6 +53,11 @@ export function CollegeCard({ college, degrees = [] }: CollegeCardProps) {
           {isBangaloreCollege && (
             <Badge className="absolute top-3 right-3 bg-edu-primary text-white">
               Bangalore
+            </Badge>
+          )}
+          {college.isFeatured && (
+            <Badge className="absolute top-3 left-3 bg-yellow-500 text-white">
+              Featured
             </Badge>
           )}
         </div>

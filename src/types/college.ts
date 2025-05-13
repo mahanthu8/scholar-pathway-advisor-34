@@ -8,4 +8,5 @@ export interface College {
   fees: string;
   imageUrl: string;
   degreesOffered: number[];
+  isFeatured?: boolean;
 }

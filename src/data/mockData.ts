@@ -17,6 +17,7 @@ export interface College {
   degreesOffered: number[];
   description: string;
   imageUrl: string;
+  isFeatured?: boolean;
 }
 
 export const degrees: Degree[] = [
@@ -180,7 +181,8 @@ export const colleges: College[] = [
     fees: "₹80,000 - ₹2,50,000 per year",
     degreesOffered: [1, 7],
     description: "A premier engineering institution known for its excellent faculty and research facilities.",
-    imageUrl: "https://via.placeholder.com/400x300?text=National+Institute+of+Technology"
+    imageUrl: "https://via.placeholder.com/400x300?text=National+Institute+of+Technology",
+    isFeatured: true
   },
   {
     id: 2,
@@ -220,7 +222,8 @@ export const colleges: College[] = [
     fees: "₹80,000 - ₹2,00,000 per year",
     degreesOffered: [2, 4, 6, 8],
     description: "Known for its academic excellence and holistic approach to education across various disciplines.",
-    imageUrl: "https://via.placeholder.com/400x300?text=Christ+University"
+    imageUrl: "https://via.placeholder.com/400x300?text=Christ+University",
+    isFeatured: true
   },
   {
     id: 6,
@@ -240,7 +243,8 @@ export const colleges: College[] = [
     fees: "₹50,000 - ₹2,00,000 per year",
     degreesOffered: [1, 5, 7],
     description: "A premier research institution focusing on advanced scientific and technological research and education.",
-    imageUrl: "https://via.placeholder.com/400x300?text=IISc+Bangalore"
+    imageUrl: "https://via.placeholder.com/400x300?text=IISc+Bangalore",
+    isFeatured: true
   },
   {
     id: 8,
@@ -260,7 +264,8 @@ export const colleges: College[] = [
     fees: "₹1,00,000 - ₹3,00,000 per year",
     degreesOffered: [1, 7],
     description: "One of the top engineering colleges in Bangalore with strong industry connections and modern infrastructure.",
-    imageUrl: "https://via.placeholder.com/400x300?text=RV+College+of+Engineering"
+    imageUrl: "https://via.placeholder.com/400x300?text=RV+College+of+Engineering",
+    isFeatured: true
   },
   {
     id: 10,
@@ -270,7 +275,8 @@ export const colleges: College[] = [
     fees: "₹1,50,000 - ₹3,50,000 per year",
     degreesOffered: [1, 5, 7],
     description: "A renowned institution focused on providing quality education in engineering, medicine, and management studies.",
-    imageUrl: "https://via.placeholder.com/400x300?text=PES+University"
+    imageUrl: "https://via.placeholder.com/400x300?text=PES+University",
+    isFeatured: true
   },
   {
     id: 11,
@@ -280,7 +286,8 @@ export const colleges: College[] = [
     fees: "₹90,000 - ₹2,80,000 per year",
     degreesOffered: [1, 7],
     description: "One of the oldest engineering colleges in Karnataka with strong alumni network and industry partnerships.",
-    imageUrl: "https://via.placeholder.com/400x300?text=BMS+College+of+Engineering"
+    imageUrl: "https://via.placeholder.com/400x300?text=BMS+College+of+Engineering",
+    isFeatured: true
   },
   {
     id: 12,
@@ -321,5 +328,60 @@ export const colleges: College[] = [
     degreesOffered: [4, 5, 6, 8],
     description: "A renowned college offering various undergraduate and postgraduate programs with a focus on holistic development.",
     imageUrl: "https://via.placeholder.com/400x300?text=St+Joseph's+College"
+  },
+  {
+    id: 16,
+    name: "Bangalore Institute of Technology",
+    location: "Bangalore, Karnataka",
+    rating: 4.3,
+    fees: "₹85,000 - ₹2,50,000 per year",
+    degreesOffered: [1, 7],
+    description: "A well-established engineering institute known for its quality education and placement opportunities.",
+    imageUrl: "https://via.placeholder.com/400x300?text=Bangalore+Institute+of+Technology",
+    isFeatured: true
+  },
+  {
+    id: 17,
+    name: "Ramaiah Institute of Management",
+    location: "Bangalore, Karnataka",
+    rating: 4.2,
+    fees: "₹1,20,000 - ₹2,80,000 per year",
+    degreesOffered: [2],
+    description: "A premier business school offering quality management education with industry-relevant curriculum.",
+    imageUrl: "https://via.placeholder.com/400x300?text=Ramaiah+Institute+of+Management",
+    isFeatured: true
+  },
+  {
+    id: 18,
+    name: "Jain University",
+    location: "Bangalore, Karnataka",
+    rating: 4.4,
+    fees: "₹70,000 - ₹2,20,000 per year",
+    degreesOffered: [1, 2, 4, 5, 6, 8],
+    description: "A deemed-to-be university offering diverse programs across multiple disciplines with a focus on entrepreneurship.",
+    imageUrl: "https://via.placeholder.com/400x300?text=Jain+University",
+    isFeatured: true
+  },
+  {
+    id: 19,
+    name: "Reva University",
+    location: "Bangalore, Karnataka",
+    rating: 4.2,
+    fees: "₹80,000 - ₹2,50,000 per year",
+    degreesOffered: [1, 2, 5, 7],
+    description: "A private university with modern infrastructure and programs designed to meet industry requirements.",
+    imageUrl: "https://via.placeholder.com/400x300?text=Reva+University",
+    isFeatured: true
+  },
+  {
+    id: 20,
+    name: "CMR University",
+    location: "Bangalore, Karnataka",
+    rating: 4.1,
+    fees: "₹75,000 - ₹2,30,000 per year",
+    degreesOffered: [1, 2, 6, 8],
+    description: "An institution known for its industry-focused curriculum and emphasis on practical learning.",
+    imageUrl: "https://via.placeholder.com/400x300?text=CMR+University",
+    isFeatured: true
   }
 ];

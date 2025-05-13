@@ -14,6 +14,14 @@ export const fetchCollegeById = (id: number) =>
 export const fetchCollegesByDegree = (degreeId: number) => 
   get<College[]>(`/api/colleges/degree/${degreeId}`);
 
+// Get featured colleges
+export const fetchFeaturedColleges = () =>
+  get<College[]>('/api/colleges/featured');
+
+// Get Bangalore colleges
+export const fetchBangaloreColleges = () =>
+  get<College[]>('/api/colleges/bangalore');
+
 // Admin functions (require authentication)
 
 // Create a new college
