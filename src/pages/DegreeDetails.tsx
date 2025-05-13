@@ -76,7 +76,11 @@ const DegreeDetails = () => {
           {collegesOfferingDegree.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {collegesOfferingDegree.map((college) => (
-                <CollegeCard key={college.id} college={college} />
+                <CollegeCard 
+                  key={college.id} 
+                  college={college} 
+                  degrees={degrees} 
+                />
               ))}
             </div>
           ) : (

@@ -7,12 +7,13 @@ import { Degree } from "@/types/degree";
 
 interface CollegeCardProps {
   college: College;
-  degrees: Degree[];
+  degrees?: Degree[]; // Make degrees optional
 }
 
-export function CollegeCard({ college, degrees }: CollegeCardProps) {
+export function CollegeCard({ college, degrees = [] }: CollegeCardProps) {
+  // Default to empty array if degrees is not provided
   const degreesOffered = college.degreesOffered.map(
-    (id) => degrees.find((degree) => degree.id === id)?.name || ""
+    (id) => degrees.find((degree) => degree.id === id)?.name || "Degree #" + id
   ).filter(name => name !== "");
 
   return (
