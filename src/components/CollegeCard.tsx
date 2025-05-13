@@ -52,6 +52,7 @@ export function CollegeCard({ college, degrees = [] }: CollegeCardProps) {
               src={college.imageUrl}
               alt={college.name}
               className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              loading="lazy"
             />
           </AspectRatio>
           {isBangaloreCollege && (

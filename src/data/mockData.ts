@@ -181,7 +181,7 @@ export const colleges: College[] = [
     fees: "₹80,000 - ₹2,50,000 per year",
     degreesOffered: [1, 7],
     description: "A premier engineering institution known for its excellent faculty and research facilities.",
-    imageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1186&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -192,7 +192,7 @@ export const colleges: College[] = [
     fees: "₹3,00,000 - ₹5,00,000 per year",
     degreesOffered: [2],
     description: "One of the most prestigious business schools in India, known for its rigorous curriculum and industry connections.",
-    imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop"
   },
   {
     id: 3,
@@ -202,7 +202,7 @@ export const colleges: College[] = [
     fees: "₹1,50,000 - ₹4,00,000 per year",
     degreesOffered: [3],
     description: "A leading medical institution known for its cutting-edge research and comprehensive healthcare training.",
-    imageUrl: "https://images.unsplash.com/photo-1551601651-2a8c6c8f2d45?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1551038247-3d9af20df552?auto=format&fit=crop"
   },
   {
     id: 4,
@@ -212,7 +212,7 @@ export const colleges: College[] = [
     fees: "₹20,000 - ₹1,00,000 per year",
     degreesOffered: [4, 5, 6, 8],
     description: "A historic university offering a wide range of courses across disciplines with a vibrant campus life.",
-    imageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop"
   },
   {
     id: 5,
@@ -222,7 +222,7 @@ export const colleges: College[] = [
     fees: "₹80,000 - ₹2,00,000 per year",
     degreesOffered: [2, 4, 6, 8],
     description: "Known for its academic excellence and holistic approach to education across various disciplines.",
-    imageUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1466442929976-97f336a657be?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -233,7 +233,7 @@ export const colleges: College[] = [
     fees: "₹40,000 - ₹1,50,000 per year",
     degreesOffered: [4, 5, 6, 8],
     description: "A renowned institution with a strong focus on liberal arts and sciences, promoting critical thinking and research.",
-    imageUrl: "https://images.unsplash.com/photo-1615023991176-2b43665b420a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?auto=format&fit=crop"
   },
   {
     id: 7,
@@ -243,7 +243,7 @@ export const colleges: College[] = [
     fees: "₹50,000 - ₹2,00,000 per year",
     degreesOffered: [1, 5, 7],
     description: "A premier research institution focusing on advanced scientific and technological research and education.",
-    imageUrl: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -254,7 +254,7 @@ export const colleges: College[] = [
     fees: "₹30,000 - ₹1,00,000 per year",
     degreesOffered: [2, 4, 6, 8],
     description: "A prestigious institution known for its excellence in humanities, sciences, and commerce education.",
-    imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1431576901776-e539bd916ba2?auto=format&fit=crop"
   },
   {
     id: 9,
@@ -264,7 +264,7 @@ export const colleges: College[] = [
     fees: "₹1,00,000 - ₹3,00,000 per year",
     degreesOffered: [1, 7],
     description: "One of the top engineering colleges in Bangalore with strong industry connections and modern infrastructure.",
-    imageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1186&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -275,7 +275,7 @@ export const colleges: College[] = [
     fees: "₹1,50,000 - ₹3,50,000 per year",
     degreesOffered: [1, 5, 7],
     description: "A renowned institution focused on providing quality education in engineering, medicine, and management studies.",
-    imageUrl: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1460574283810-2aab119d8511?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -286,7 +286,7 @@ export const colleges: College[] = [
     fees: "₹90,000 - ₹2,80,000 per year",
     degreesOffered: [1, 7],
     description: "One of the oldest engineering colleges in Karnataka with strong alumni network and industry partnerships.",
-    imageUrl: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1172&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -297,7 +297,7 @@ export const colleges: College[] = [
     fees: "₹40,000 - ₹1,20,000 per year",
     degreesOffered: [2, 4, 6, 8],
     description: "A premier women's college offering various undergraduate and postgraduate programs in arts, science, and commerce.",
-    imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1439337153520-7082a56a81f4?auto=format&fit=crop"
   },
   {
     id: 13,
@@ -307,7 +307,7 @@ export const colleges: College[] = [
     fees: "₹1,00,000 - ₹3,00,000 per year",
     degreesOffered: [1, 7],
     description: "A top engineering institute known for its cutting-edge research and industry-focused curriculum.",
-    imageUrl: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1120&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?auto=format&fit=crop"
   },
   {
     id: 14,
@@ -317,7 +317,7 @@ export const colleges: College[] = [
     fees: "₹1,80,000 - ₹5,00,000 per year",
     degreesOffered: [3],
     description: "One of the premier medical colleges in South India with excellent clinical exposure and research opportunities.",
-    imageUrl: "https://images.unsplash.com/photo-1631815588090-d1bcbe9a25db?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1433832597046-4f10e10ac764?auto=format&fit=crop"
   },
   {
     id: 15,
@@ -327,7 +327,7 @@ export const colleges: College[] = [
     fees: "₹30,000 - ₹1,10,000 per year",
     degreesOffered: [4, 5, 6, 8],
     description: "A renowned college offering various undergraduate and postgraduate programs with a focus on holistic development.",
-    imageUrl: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop"
   },
   {
     id: 16,
@@ -337,7 +337,7 @@ export const colleges: College[] = [
     fees: "₹85,000 - ₹2,50,000 per year",
     degreesOffered: [1, 7],
     description: "A well-established engineering institute known for its quality education and placement opportunities.",
-    imageUrl: "https://images.unsplash.com/photo-1525921429624-479b6a26d84d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -348,7 +348,7 @@ export const colleges: College[] = [
     fees: "₹1,20,000 - ₹2,80,000 per year",
     degreesOffered: [2],
     description: "A premier business school offering quality management education with industry-relevant curriculum.",
-    imageUrl: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1525921429624-479b6a26d84d?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -359,7 +359,7 @@ export const colleges: College[] = [
     fees: "₹70,000 - ₹2,20,000 per year",
     degreesOffered: [1, 2, 4, 5, 6, 8],
     description: "A deemed-to-be university offering diverse programs across multiple disciplines with a focus on entrepreneurship.",
-    imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1172&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -370,7 +370,7 @@ export const colleges: College[] = [
     fees: "₹80,000 - ₹2,50,000 per year",
     degreesOffered: [1, 2, 5, 7],
     description: "A private university with modern infrastructure and programs designed to meet industry requirements.",
-    imageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1186&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop",
     isFeatured: true
   },
   {
@@ -381,7 +381,7 @@ export const colleges: College[] = [
     fees: "₹75,000 - ₹2,30,000 per year",
     degreesOffered: [1, 2, 6, 8],
     description: "An institution known for its industry-focused curriculum and emphasis on practical learning.",
-    imageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1439337153520-7082a56a81f4?auto=format&fit=crop",
     isFeatured: true
   }
 ];
