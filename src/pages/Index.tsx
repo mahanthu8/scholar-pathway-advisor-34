@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { degrees, colleges } from "@/data/mockData";
@@ -10,6 +9,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { StudentEligibilityForm, StudentDetails } from "@/components/StudentEligibilityForm";
 import { getEligibleDegrees } from "@/utils/eligibilityFilter";
 import { useToast } from "@/hooks/use-toast";
+import { KcetRankFinder } from "@/components/KcetRankFinder";
+import { College } from "@/types/college";
 
 const Index = () => {
   const featuredDegrees = degrees.slice(0, 4);
@@ -19,6 +20,10 @@ const Index = () => {
   const [eligibleDegrees, setEligibleDegrees] = useState<typeof degrees>([]);
   const [matchingColleges, setMatchingColleges] = useState<typeof colleges>([]);
   const { toast } = useToast();
+
+  // Add state for KCET rank based college results
+  const [kcetColleges, setKcetColleges] = useState<College[]>([]);
+  const [isKcetResults, setIsKcetResults] = useState(false);
 
   const handleEligibilitySubmit = (details: StudentDetails) => {
     setFindingMatches(true);
@@ -45,6 +50,7 @@ const Index = () => {
       
       setMatchingColleges(matching);
       setFindingMatches(false);
+      setIsKcetResults(false); // Reset KCET results when using eligibility search
       
       toast({
         title: "Results Found",
@@ -56,6 +62,19 @@ const Index = () => {
       // Scroll to the results section
       document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
     }, 1000); // Simulate processing time
+  };
+
+  // Handler for when colleges are found through KCET rank
+  const handleKcetCollegesFound = (colleges: College[]) => {
+    setKcetColleges(colleges);
+    setIsKcetResults(true);
+    
+    // Reset eligibility-based results
+    setEligibleDegrees([]);
+    setMatchingColleges([]);
+    
+    // Scroll to the results section
+    document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -79,18 +98,23 @@ const Index = () => {
               >
                 Find
               </Button>
+              
+              {/* Add KCET Rank Finder Button */}
+              <KcetRankFinder onCollegesFound={handleKcetCollegesFound} />
             </div>
           </div>
         </div>
       </section>
 
       {/* Results Section - Only shows after submitting the form */}
-      {(eligibleDegrees.length > 0 || matchingColleges.length > 0) && (
+      {(eligibleDegrees.length > 0 || matchingColleges.length > 0 || kcetColleges.length > 0) && (
         <section className="py-16 bg-gray-50" id="results-section">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Your Personalized Academic Matches</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">
+              {isKcetResults ? "Colleges Based on Your KCET Rank" : "Your Personalized Academic Matches"}
+            </h2>
             
-            {eligibleDegrees.length > 0 && (
+            {!isKcetResults && eligibleDegrees.length > 0 && (
               <div className="mb-12">
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="text-xl font-bold text-gray-800">Recommended Degree Programs</h3>
@@ -106,7 +130,7 @@ const Index = () => {
               </div>
             )}
             
-            {matchingColleges.length > 0 && (
+            {!isKcetResults && matchingColleges.length > 0 && (
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="text-xl font-bold text-gray-800">Matching Colleges</h3>
@@ -116,6 +140,22 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {matchingColleges.slice(0, 3).map((college) => (
+                    <CollegeCard key={college.id} college={college} degrees={degrees} />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* KCET Rank Based College Results */}
+            {isKcetResults && kcetColleges.length > 0 && (
+              <div>
+                <div className="bg-white p-4 rounded-lg shadow mb-6">
+                  <p className="text-gray-600">
+                    These colleges accept students with your KCET rank. Click on a college to view available courses.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {kcetColleges.map((college) => (
                     <CollegeCard key={college.id} college={college} degrees={degrees} />
                   ))}
                 </div>
@@ -261,13 +301,18 @@ const Index = () => {
             <p className="text-xl mb-8">
               Enter your academic details to get personalized degree and college recommendations tailored to your profile.
             </p>
-            <Button 
-              size="lg" 
-              className="bg-white text-edu-primary hover:bg-gray-100"
-              onClick={() => setIsDialogOpen(true)}
-            >
-              Find Courses & Colleges
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-white text-edu-primary hover:bg-gray-100"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                Find Courses & Colleges
+              </Button>
+              
+              {/* Add KCET Rank Finder Button in CTA section */}
+              <KcetRankFinder onCollegesFound={handleKcetCollegesFound} />
+            </div>
           </div>
         </div>
       </section>
