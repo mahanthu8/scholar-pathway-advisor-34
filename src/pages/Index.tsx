@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { degrees, colleges } from "@/data/mockData";
@@ -9,8 +10,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { StudentEligibilityForm, StudentDetails } from "@/components/StudentEligibilityForm";
 import { getEligibleDegrees } from "@/utils/eligibilityFilter";
 import { useToast } from "@/hooks/use-toast";
-import { KcetRankFinder } from "@/components/KcetRankFinder";
 import { College } from "@/types/college";
+import { fetchCollegesByKcetRank } from "@/api/supabaseService";
 
 const Index = () => {
   const featuredDegrees = degrees.slice(0, 4);
@@ -25,10 +26,45 @@ const Index = () => {
   const [kcetColleges, setKcetColleges] = useState<College[]>([]);
   const [isKcetResults, setIsKcetResults] = useState(false);
 
-  const handleEligibilitySubmit = (details: StudentDetails) => {
+  const handleEligibilitySubmit = async (details: StudentDetails) => {
     setFindingMatches(true);
     
-    setTimeout(() => {
+    try {
+      // Handle KCET rank search if provided
+      if (details.kcetRank) {
+        try {
+          const colleges = await fetchCollegesByKcetRank(details.kcetRank, details.category || 'General');
+          if (colleges && colleges.length > 0) {
+            setKcetColleges(colleges);
+            setIsKcetResults(true);
+            setEligibleDegrees([]);
+            setMatchingColleges([]);
+            setFindingMatches(false);
+            setIsDialogOpen(false);
+            
+            toast({
+              title: "KCET Results Found",
+              description: `Found ${colleges.length} colleges matching your KCET rank.`,
+            });
+            
+            // Scroll to the results section
+            document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
+            return;
+          } else {
+            // If no colleges found by KCET rank, we'll fall back to regular eligibility matching
+            toast({
+              title: "No KCET Matches",
+              description: "No colleges found for the given KCET rank. Showing eligibility-based results instead.",
+              variant: "default",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching colleges by KCET rank:", error);
+          // Continue with regular eligibility matching if KCET search fails
+        }
+      }
+      
+      // Regular eligibility matching
       // Find eligible degrees based on student details
       const eligible = getEligibleDegrees(degrees, details);
       setEligibleDegrees(eligible);
@@ -49,7 +85,6 @@ const Index = () => {
       });
       
       setMatchingColleges(matching);
-      setFindingMatches(false);
       setIsKcetResults(false); // Reset KCET results when using eligibility search
       
       toast({
@@ -61,20 +96,9 @@ const Index = () => {
       
       // Scroll to the results section
       document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
-    }, 1000); // Simulate processing time
-  };
-
-  // Handler for when colleges are found through KCET rank
-  const handleKcetCollegesFound = (colleges: College[]) => {
-    setKcetColleges(colleges);
-    setIsKcetResults(true);
-    
-    // Reset eligibility-based results
-    setEligibleDegrees([]);
-    setMatchingColleges([]);
-    
-    // Scroll to the results section
-    document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
+    } finally {
+      setFindingMatches(false);
+    }
   };
 
   return (
@@ -98,9 +122,6 @@ const Index = () => {
               >
                 Find
               </Button>
-              
-              {/* Updated KCET Rank Finder Button */}
-              <KcetRankFinder onCollegesFound={handleKcetCollegesFound} />
             </div>
           </div>
         </div>
@@ -301,18 +322,13 @@ const Index = () => {
             <p className="text-xl mb-8">
               Enter your academic details to get personalized degree and college recommendations tailored to your profile.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-white text-edu-primary hover:bg-gray-100"
-                onClick={() => setIsDialogOpen(true)}
-              >
-                Find Courses & Colleges
-              </Button>
-              
-              {/* Updated KCET Rank Finder Button in CTA section */}
-              <KcetRankFinder onCollegesFound={handleKcetCollegesFound} />
-            </div>
+            <Button 
+              size="lg" 
+              className="bg-white text-edu-primary hover:bg-gray-100"
+              onClick={() => setIsDialogOpen(true)}
+            >
+              Find Courses & Colleges
+            </Button>
           </div>
         </div>
       </section>
@@ -323,7 +339,7 @@ const Index = () => {
           <DialogHeader>
             <DialogTitle>Enter Your Academic Details</DialogTitle>
             <DialogDescription>
-              Provide your PUC stream and percentage to find courses and colleges that match your profile.
+              Provide your PUC stream, percentage, and optionally your KCET rank to find courses and colleges that match your profile.
             </DialogDescription>
           </DialogHeader>
           <StudentEligibilityForm

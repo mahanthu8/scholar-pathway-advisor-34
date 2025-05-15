@@ -11,6 +11,8 @@ export type StudentDetails = {
   pucStream: string;
   pucPercentage: number;
   preferredLocation?: string;
+  kcetRank?: number;
+  category?: string;
 };
 
 interface StudentEligibilityFormProps {
@@ -24,6 +26,8 @@ export function StudentEligibilityForm({ onSubmit, isLoading }: StudentEligibili
     pucStream: "",
     pucPercentage: 0,
     preferredLocation: "",
+    kcetRank: undefined,
+    category: "General"
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,6 +54,8 @@ export function StudentEligibilityForm({ onSubmit, isLoading }: StudentEligibili
 
     onSubmit(details);
   };
+
+  const categories = ['General', 'SC', 'ST', 'OBC', '2A', '2B', '3A', '3B'];
 
   return (
     <Card className="p-6 bg-white shadow-md">
@@ -85,6 +91,37 @@ export function StudentEligibilityForm({ onSubmit, isLoading }: StudentEligibili
             value={details.pucPercentage || ""}
             onChange={(e) => setDetails({ ...details, pucPercentage: parseFloat(e.target.value) })}
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="kcetRank">KCET Rank (Optional)</Label>
+          <Input
+            id="kcetRank"
+            type="number"
+            placeholder="Enter your KCET rank"
+            min="1"
+            value={details.kcetRank || ""}
+            onChange={(e) => setDetails({ ...details, kcetRank: e.target.value ? parseInt(e.target.value) : undefined })}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="category">Category (For KCET)</Label>
+          <Select 
+            value={details.category} 
+            onValueChange={(value) => setDetails({ ...details, category: value })}
+          >
+            <SelectTrigger id="category">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {categories.map((cat) => (
+                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">

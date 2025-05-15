@@ -2,7 +2,7 @@
 import { College } from "@/types/college";
 import { Degree } from "@/types/degree";
 import { colleges as mockColleges, degrees as mockDegrees } from "@/data/mockData";
-import { fetchColleges, fetchFeaturedColleges, fetchBangaloreColleges, getKarnatakaCollegesList, fetchKarnatakaColleges } from "@/api/colleges";
+import { fetchColleges, fetchFeaturedColleges, fetchBangaloreColleges } from "@/api/colleges";
 
 // Helper function to use mock data as fallback when API calls fail
 export const useMockDataOnFailure = async <T>(
@@ -52,18 +52,3 @@ export const getBangaloreColleges = async (): Promise<College[]> => {
     return mockColleges;
   }
 };
-
-export const getKarnatakaColleges = async (): Promise<College[]> => {
-  try {
-    return await fetchKarnatakaColleges();
-  } catch (error) {
-    console.warn("Failed to fetch Karnataka colleges from API, using fallback data", error);
-    // Since we're focusing only on Bangalore colleges, return those as Karnataka colleges
-    return mockColleges;
-  }
-};
-
-// Remove this function as we're now directly using the Bangalore colleges
-// export const getKarnatakaCollegesList = (): College[] => {
-//   return mockColleges;
-// };

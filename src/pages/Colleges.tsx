@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo } from "react";
 import { Layout } from "@/components/Layout";
 import { CollegeCard } from "@/components/CollegeCard";
@@ -13,10 +14,10 @@ import { useToast } from "@/hooks/use-toast";
 import { College } from "@/types/college";
 import { Degree } from "@/types/degree";
 import { MapPin, GraduationCap, Star, Filter } from "lucide-react";
-import { getColleges, getDegrees, getFeaturedColleges, getBangaloreColleges, getKarnatakaColleges } from "@/utils/mockDataFallback";
+import { getColleges, getDegrees, getFeaturedColleges, getBangaloreColleges } from "@/utils/mockDataFallback";
 import { StudentEligibilityForm, StudentDetails } from "@/components/StudentEligibilityForm";
 import { getEligibleDegrees, getEligibleColleges } from "@/utils/eligibilityFilter";
-import { KcetRankFinder } from "@/components/KcetRankFinder";
+import { fetchCollegesByKcetRank } from "@/api/supabaseService";
 
 const Colleges = () => {
   const { toast } = useToast();
@@ -37,11 +38,10 @@ const Colleges = () => {
   const [eligibleDegrees, setEligibleDegrees] = useState<Degree[]>([]);
   const [findingMatches, setFindingMatches] = useState(false);
 
-  // Add a new tab for Karnataka colleges
+  // Simplify tabs - only two tabs now
   const tabs = [
     { id: "all", label: "All Colleges" },
-    { id: "bangalore", label: "Bangalore Colleges" },
-    { id: "karnataka", label: "Karnataka Colleges" }
+    { id: "bangalore", label: "Bangalore Colleges" }
   ];
 
   // Get unique locations from colleges
@@ -70,8 +70,6 @@ const Colleges = () => {
         let collegesData;
         if (activeTab === "bangalore") {
           collegesData = await getBangaloreColleges();
-        } else if (activeTab === "karnataka") {
-          collegesData = await getKarnatakaColleges();
         } else {
           collegesData = await getColleges();
         }
@@ -97,10 +95,40 @@ const Colleges = () => {
   }, [toast, activeTab]);
 
   // Handle student eligibility form submission
-  const handleEligibilitySubmit = (details: StudentDetails) => {
+  const handleEligibilitySubmit = async (details: StudentDetails) => {
     setFindingMatches(true);
     
-    setTimeout(() => {
+    try {
+      // First check if KCET rank is provided
+      if (details.kcetRank) {
+        try {
+          const kcetColleges = await fetchCollegesByKcetRank(details.kcetRank, details.category || 'General');
+          
+          if (kcetColleges.length > 0) {
+            setFilteredColleges(kcetColleges);
+            setStudentDetails(details);
+            setIsEligibilityMode(true);
+            setFindingMatches(false);
+            
+            toast({
+              title: "KCET Results Found",
+              description: `Found ${kcetColleges.length} colleges matching your KCET rank.`,
+            });
+            return;
+          } else {
+            toast({
+              title: "No KCET Matches",
+              description: "No colleges found for the given KCET rank. Showing eligibility-based results instead.",
+              variant: "default",
+            });
+            // Fall back to eligibility-based search
+          }
+        } catch (error) {
+          console.error("Error fetching colleges by KCET rank:", error);
+          // Fall back to eligibility-based search
+        }
+      }
+      
       // Find eligible degrees based on student details
       const eligible = getEligibleDegrees(degrees, details);
       setEligibleDegrees(eligible);
@@ -118,13 +146,14 @@ const Colleges = () => {
       setFilteredColleges(matchingColleges);
       setStudentDetails(details);
       setIsEligibilityMode(true);
-      setFindingMatches(false);
       
       toast({
         title: "Results Found",
         description: `Found ${matchingColleges.length} colleges and ${eligible.length} degree programs matching your profile.`,
       });
-    }, 1000); // Simulate processing time
+    } finally {
+      setFindingMatches(false);
+    }
   };
 
   // Reset eligibility filtering
@@ -187,7 +216,7 @@ const Colleges = () => {
               Explore colleges offering various degree programs across Karnataka with a special focus on institutions in Bangalore.
             </p>
             
-            {/* Search options with updated KCET Rank Finder */}
+            {/* Search options - simplified */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
               <Button 
                 variant={!isEligibilityMode ? "default" : "outline"} 
@@ -203,13 +232,12 @@ const Colleges = () => {
               >
                 Eligibility-Based Search
               </Button>
-              <KcetRankFinder onCollegesFound={setFilteredColleges} />
             </div>
             
             {!isEligibilityMode ? (
               <>
                 <Tabs defaultValue="all" className="w-full mb-8" onValueChange={setActiveTab}>
-                  <TabsList className="grid w-full grid-cols-3 mb-6">
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
                     {tabs.map(tab => (
                       <TabsTrigger key={tab.id} value={tab.id}>{tab.label}</TabsTrigger>
                     ))}
@@ -332,6 +360,9 @@ const Colleges = () => {
                                                            studentDetails.pucStream === "scienceBio" ? "Science (PCB)" : 
                                                            studentDetails.pucStream === "commerce" ? "Commerce" : "Arts"}</p>
                           <p><span className="font-medium">PUC Percentage:</span> {studentDetails.pucPercentage}%</p>
+                          {studentDetails.kcetRank && (
+                            <p><span className="font-medium">KCET Rank:</span> {studentDetails.kcetRank}</p>
+                          )}
                           {studentDetails.preferredLocation && (
                             <p><span className="font-medium">Preferred Location:</span> {studentDetails.preferredLocation}</p>
                           )}
@@ -379,16 +410,23 @@ const Colleges = () => {
                 <h2 className="text-2xl font-bold text-gray-900">Colleges Matching Your Profile</h2>
                 <Badge className="bg-edu-secondary px-3 py-1">{filteredColleges.length} Institutions</Badge>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-lg font-medium text-gray-800 mb-3">Eligible Degree Programs</h3>
-                <div className="flex flex-wrap gap-2">
-                  {eligibleDegrees.map(degree => (
-                    <Badge key={degree.id} className="bg-edu-light text-edu-primary py-1 px-3">
-                      {degree.name}
-                    </Badge>
-                  ))}
+              {studentDetails.kcetRank ? (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">KCET Rank-Based Results</h3>
+                  <p>Showing colleges that accept students with KCET rank {studentDetails.kcetRank} ({studentDetails.category || 'General'} category)</p>
                 </div>
-              </div>
+              ) : eligibleDegrees.length > 0 && (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-medium text-gray-800 mb-3">Eligible Degree Programs</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {eligibleDegrees.map(degree => (
+                      <Badge key={degree.id} className="bg-edu-light text-edu-primary py-1 px-3">
+                        {degree.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
           
@@ -402,20 +440,6 @@ const Colleges = () => {
               <p className="text-gray-600">
                 Bangalore, known as India's Silicon Valley, hosts some of the country's premier educational institutions. 
                 These colleges offer cutting-edge facilities, industry connections, and diverse degree programs.
-              </p>
-            </div>
-          )}
-          
-          {/* Karnataka colleges header */}
-          {activeTab === "karnataka" && !isEligibilityMode && (
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">Engineering Colleges in Karnataka</h2>
-                <Badge className="bg-edu-secondary px-3 py-1">{filteredColleges.length} Institutions</Badge>
-              </div>
-              <p className="text-gray-600">
-                Karnataka is home to numerous prestigious engineering institutions spread across cities like Bangalore, 
-                Mysuru, Mangaluru, and more. These colleges offer a wide range of engineering and technical programs.
               </p>
             </div>
           )}
