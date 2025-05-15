@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { fetchCollegesByKcetRank } from "@/api/supabaseService";
 import { College } from "@/types/college";
 import { useToast } from "@/hooks/use-toast";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Search } from "lucide-react";
 
 interface KcetRankFinderProps {
   onCollegesFound: (colleges: College[]) => void;
@@ -71,10 +71,10 @@ export function KcetRankFinder({ onCollegesFound }: KcetRankFinderProps) {
       <DialogTrigger asChild>
         <Button 
           size="lg" 
-          className="bg-white text-edu-primary hover:bg-gray-100 flex items-center gap-2"
+          className="bg-white text-edu-primary hover:bg-gray-100 flex items-center gap-2 w-full sm:w-auto"
         >
-          <GraduationCap className="w-5 h-5" />
-          Enter KCET Rank
+          <Search className="w-5 h-5" />
+          Find & Enter KCET Rank
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

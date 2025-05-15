@@ -187,7 +187,7 @@ const Colleges = () => {
               Explore colleges offering various degree programs across Karnataka with a special focus on institutions in Bangalore.
             </p>
             
-            {/* Search options with KCET Rank Finder */}
+            {/* Search options with updated KCET Rank Finder */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
               <Button 
                 variant={!isEligibilityMode ? "default" : "outline"} 

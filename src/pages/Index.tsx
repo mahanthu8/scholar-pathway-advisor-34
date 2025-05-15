@@ -99,7 +99,7 @@ const Index = () => {
                 Find
               </Button>
               
-              {/* Add KCET Rank Finder Button */}
+              {/* Updated KCET Rank Finder Button */}
               <KcetRankFinder onCollegesFound={handleKcetCollegesFound} />
             </div>
           </div>
@@ -310,7 +310,7 @@ const Index = () => {
                 Find Courses & Colleges
               </Button>
               
-              {/* Add KCET Rank Finder Button in CTA section */}
+              {/* Updated KCET Rank Finder Button in CTA section */}
               <KcetRankFinder onCollegesFound={handleKcetCollegesFound} />
             </div>
           </div>
