@@ -9,7 +9,165 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      college_degrees: {
+        Row: {
+          college_id: number
+          created_at: string
+          cutoff_rank: number | null
+          degree_id: number
+          id: number
+        }
+        Insert: {
+          college_id: number
+          created_at?: string
+          cutoff_rank?: number | null
+          degree_id: number
+          id?: number
+        }
+        Update: {
+          college_id?: number
+          created_at?: string
+          cutoff_rank?: number | null
+          degree_id?: number
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_degrees_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "college_degrees_degree_id_fkey"
+            columns: ["degree_id"]
+            isOneToOne: false
+            referencedRelation: "degrees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      colleges: {
+        Row: {
+          college_code: string | null
+          created_at: string
+          description: string
+          fees: string
+          id: number
+          image_url: string
+          is_featured: boolean | null
+          location: string
+          name: string
+          rating: number
+        }
+        Insert: {
+          college_code?: string | null
+          created_at?: string
+          description: string
+          fees: string
+          id?: number
+          image_url: string
+          is_featured?: boolean | null
+          location: string
+          name: string
+          rating: number
+        }
+        Update: {
+          college_code?: string | null
+          created_at?: string
+          description?: string
+          fees?: string
+          id?: number
+          image_url?: string
+          is_featured?: boolean | null
+          location?: string
+          name?: string
+          rating?: number
+        }
+        Relationships: []
+      }
+      degrees: {
+        Row: {
+          career_prospects: string
+          created_at: string
+          description: string
+          duration: string
+          eligibility: string
+          id: number
+          image_url: string
+          is_featured: boolean | null
+          name: string
+        }
+        Insert: {
+          career_prospects: string
+          created_at?: string
+          description: string
+          duration: string
+          eligibility: string
+          id?: number
+          image_url: string
+          is_featured?: boolean | null
+          name: string
+        }
+        Update: {
+          career_prospects?: string
+          created_at?: string
+          description?: string
+          duration?: string
+          eligibility?: string
+          id?: number
+          image_url?: string
+          is_featured?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
+      kcet_cutoffs: {
+        Row: {
+          category: string
+          college_id: number
+          created_at: string
+          cutoff_rank: number
+          degree_id: number
+          id: number
+          year: number
+        }
+        Insert: {
+          category: string
+          college_id: number
+          created_at?: string
+          cutoff_rank: number
+          degree_id: number
+          id?: number
+          year: number
+        }
+        Update: {
+          category?: string
+          college_id?: number
+          created_at?: string
+          cutoff_rank?: number
+          degree_id?: number
+          id?: number
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kcet_cutoffs_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kcet_cutoffs_degree_id_fkey"
+            columns: ["degree_id"]
+            isOneToOne: false
+            referencedRelation: "degrees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
