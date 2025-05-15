@@ -1,3 +1,4 @@
+
 import { College } from "@/types/college";
 import { Degree } from "@/types/degree";
 import { colleges as mockColleges, degrees as mockDegrees } from "@/data/mockData";
@@ -23,8 +24,8 @@ export const getColleges = async (fetchFunction: () => Promise<College[]> = fetc
     return await fetchFunction();
   } catch (error) {
     console.warn("Failed to fetch colleges from API, using fallback data", error);
-    // Use our new function for the full list of Karnataka colleges
-    return getKarnatakaCollegesList();
+    // Use only Bangalore colleges
+    return mockColleges;
   }
 };
 
@@ -37,9 +38,8 @@ export const getFeaturedColleges = async (): Promise<College[]> => {
     return await fetchFeaturedColleges();
   } catch (error) {
     console.warn("Failed to fetch featured colleges from API, using fallback data", error);
-    // Filter the full list for featured colleges
-    const allColleges = getKarnatakaCollegesList();
-    return allColleges.filter((college, index) => index % 5 === 0); // Mark every 5th college as featured for demo
+    // Filter for featured colleges
+    return mockColleges.filter(college => college.isFeatured);
   }
 };
 
@@ -48,12 +48,8 @@ export const getBangaloreColleges = async (): Promise<College[]> => {
     return await fetchBangaloreColleges();
   } catch (error) {
     console.warn("Failed to fetch Bangalore colleges from API, using fallback data", error);
-    // Filter the full list for Bangalore colleges
-    const allColleges = getKarnatakaCollegesList();
-    return allColleges.filter(college => 
-      college.location.toLowerCase().includes("bengaluru") || 
-      college.location.toLowerCase().includes("bangalore")
-    );
+    // All our colleges are already from Bangalore
+    return mockColleges;
   }
 };
 
@@ -62,6 +58,12 @@ export const getKarnatakaColleges = async (): Promise<College[]> => {
     return await fetchKarnatakaColleges();
   } catch (error) {
     console.warn("Failed to fetch Karnataka colleges from API, using fallback data", error);
-    return getKarnatakaCollegesList();
+    // Since we're focusing only on Bangalore colleges, return those as Karnataka colleges
+    return mockColleges;
   }
 };
+
+// Remove this function as we're now directly using the Bangalore colleges
+// export const getKarnatakaCollegesList = (): College[] => {
+//   return mockColleges;
+// };
