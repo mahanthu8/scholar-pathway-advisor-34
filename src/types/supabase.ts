@@ -12,6 +12,10 @@ export interface CollegeFromSupabase {
   is_featured?: boolean;
   college_code?: string;
   created_at: string;
+  specialization?: string[];
+  rank?: number;
+  affiliation?: string;
+  features?: string[];
 }
 
 // Helper function to map Supabase college data to our College type
@@ -26,6 +30,10 @@ export function mapSupabaseToCollege(college: CollegeFromSupabase): College {
     imageUrl: college.image_url,
     degreesOffered: [], // Will be populated separately
     isFeatured: college.is_featured || false,
-    collegeCode: college.college_code
+    collegeCode: college.college_code,
+    specialization: college.specialization || [],
+    rank: college.rank,
+    affiliation: college.affiliation,
+    features: college.features || []
   };
 }

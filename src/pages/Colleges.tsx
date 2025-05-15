@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Layout } from "@/components/Layout";
 import { CollegeCard } from "@/components/CollegeCard";
+import { EnhancedCollegeCard } from "@/components/EnhancedCollegeCard";
 import { fetchColleges, fetchFeaturedColleges, fetchBangaloreColleges } from "@/api/colleges";
 import { fetchDegrees } from "@/api/degrees";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import { MapPin, GraduationCap, Star, Filter } from "lucide-react";
 import { getColleges, getDegrees, getFeaturedColleges, getBangaloreColleges, getKarnatakaColleges } from "@/utils/mockDataFallback";
 import { StudentEligibilityForm, StudentDetails } from "@/components/StudentEligibilityForm";
 import { getEligibleDegrees, getEligibleColleges } from "@/utils/eligibilityFilter";
+import { KcetRankFinder } from "@/components/KcetRankFinder";
 
 const Colleges = () => {
   const { toast } = useToast();
@@ -185,24 +187,23 @@ const Colleges = () => {
               Explore colleges offering various degree programs across Karnataka with a special focus on institutions in Bangalore.
             </p>
             
-            {/* Toggle between normal search and eligibility-based search */}
-            <div className="flex justify-center mb-6">
-              <div className="inline-flex rounded-md shadow-sm">
-                <Button 
-                  variant={!isEligibilityMode ? "default" : "outline"} 
-                  className={!isEligibilityMode ? "bg-white text-edu-primary border-r" : "bg-transparent text-white"} 
-                  onClick={() => isEligibilityMode && resetEligibilityFilter()}
-                >
-                  Standard Search
-                </Button>
-                <Button 
-                  variant={isEligibilityMode ? "default" : "outline"} 
-                  className={isEligibilityMode ? "bg-white text-edu-primary" : "bg-transparent text-white"}
-                  onClick={() => !isEligibilityMode && setIsEligibilityMode(true)}
-                >
-                  Eligibility-Based Search
-                </Button>
-              </div>
+            {/* Search options with KCET Rank Finder */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+              <Button 
+                variant={!isEligibilityMode ? "default" : "outline"} 
+                className={!isEligibilityMode ? "bg-white text-edu-primary" : "bg-transparent text-white"} 
+                onClick={() => isEligibilityMode && resetEligibilityFilter()}
+              >
+                Standard Search
+              </Button>
+              <Button 
+                variant={isEligibilityMode ? "default" : "outline"} 
+                className={isEligibilityMode ? "bg-white text-edu-primary" : "bg-transparent text-white"}
+                onClick={() => !isEligibilityMode && setIsEligibilityMode(true)}
+              >
+                Eligibility-Based Search
+              </Button>
+              <KcetRankFinder onCollegesFound={setFilteredColleges} />
             </div>
             
             {!isEligibilityMode ? (
@@ -428,7 +429,7 @@ const Colleges = () => {
           ) : filteredColleges.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredColleges.map((college) => (
-                <CollegeCard key={college.id} college={college} degrees={degrees} />
+                <EnhancedCollegeCard key={college.id} college={college} degrees={degrees} />
               ))}
             </div>
           ) : (

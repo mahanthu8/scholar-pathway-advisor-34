@@ -103,3 +103,50 @@ export async function fetchCollegesByKcetRank(rank: number, category: string = '
     return [];
   }
 }
+
+// Get top ranked colleges (based on the new rank field)
+export async function fetchTopRankedColleges(limit: number = 10): Promise<College[]> {
+  try {
+    const { data: collegesData, error: collegesError } = await supabase
+      .from('colleges')
+      .select('*')
+      .order('rank', { ascending: true })
+      .not('rank', 'is', null)
+      .limit(limit);
+    
+    if (collegesError) {
+      console.error('Error fetching top ranked colleges:', collegesError);
+      throw new Error('Failed to fetch top ranked colleges');
+    }
+    
+    // Get all college-degree relationships for these colleges
+    const collegeIds = collegesData.map(college => college.id);
+    
+    const { data: collegeDegrees, error: relationshipError } = await supabase
+      .from('college_degrees')
+      .select('*')
+      .in('college_id', collegeIds);
+
+    if (relationshipError) {
+      console.error('Error fetching college-degree relationships:', relationshipError);
+      throw new Error('Failed to fetch college-degree relationships');
+    }
+    
+    // Map Supabase college data to our College type
+    const colleges: College[] = collegesData.map((college: CollegeFromSupabase) => {
+      const mappedCollege = mapSupabaseToCollege(college);
+      
+      // Populate degreesOffered array
+      mappedCollege.degreesOffered = collegeDegrees
+        .filter(rel => rel.college_id === college.id)
+        .map(rel => rel.degree_id);
+      
+      return mappedCollege;
+    });
+    
+    return colleges;
+  } catch (error) {
+    console.error('Error in fetchTopRankedColleges:', error);
+    return [];
+  }
+}

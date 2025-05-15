@@ -9,5 +9,9 @@ export interface College {
   imageUrl: string;
   degreesOffered: number[];
   isFeatured?: boolean;
-  collegeCode?: string; // Adding college code field
+  collegeCode?: string;
+  specialization?: string[];
+  rank?: number;
+  affiliation?: string;
+  features?: string[];
 }

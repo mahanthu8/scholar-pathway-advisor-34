@@ -50,40 +50,52 @@ export type Database = {
       }
       colleges: {
         Row: {
+          affiliation: string | null
           college_code: string | null
           created_at: string
           description: string
+          features: string[] | null
           fees: string
           id: number
           image_url: string
           is_featured: boolean | null
           location: string
           name: string
+          rank: number | null
           rating: number
+          specialization: string[] | null
         }
         Insert: {
+          affiliation?: string | null
           college_code?: string | null
           created_at?: string
           description: string
+          features?: string[] | null
           fees: string
           id?: number
           image_url: string
           is_featured?: boolean | null
           location: string
           name: string
+          rank?: number | null
           rating: number
+          specialization?: string[] | null
         }
         Update: {
+          affiliation?: string | null
           college_code?: string | null
           created_at?: string
           description?: string
+          features?: string[] | null
           fees?: string
           id?: number
           image_url?: string
           is_featured?: boolean | null
           location?: string
           name?: string
+          rank?: number | null
           rating?: number
+          specialization?: string[] | null
         }
         Relationships: []
       }
