@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, SlidersHorizontal, MapPin, School } from "lucide-react";
-import { AnimatedIcons } from "@/components/AnimatedIcons";
 import { TopColleges } from "@/components/TopColleges";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 
@@ -55,8 +54,6 @@ const Colleges = () => {
           </div>
         </div>
       </section>
-
-      <AnimatedIcons />
 
       {/* Top Colleges Feature */}
       <TopColleges colleges={colleges} degrees={degrees} />
