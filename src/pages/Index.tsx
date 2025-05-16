@@ -10,7 +10,6 @@ import { getEligibleDegrees } from "@/utils/eligibilityFilter";
 import { useToast } from "@/hooks/use-toast";
 import { College } from "@/types/college";
 import { fetchCollegesByKcetRank } from "@/api/supabaseService";
-import { TopColleges } from "@/components/TopColleges";
 import { CollegeCard } from "@/components/CollegeCard";
 
 const Index = () => {
@@ -202,9 +201,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Top Colleges Section */}
-      <TopColleges colleges={colleges} degrees={degrees} />
-
       {/* Why Choose Us */}
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
