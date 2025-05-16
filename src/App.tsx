@@ -19,6 +19,23 @@ import { ChatBox } from "./components/ChatBox";
 
 const queryClient = new QueryClient();
 
+// Add Google Fonts
+const GoogleFonts = () => {
+  useEffect(() => {
+    // Create link element for Google Fonts
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+  
+  return null;
+};
+
 const App = () => {
   const [showRegistrationPopup, setShowRegistrationPopup] = useState(false);
   
@@ -39,6 +56,7 @@ const App = () => {
   
   return (
     <QueryClientProvider client={queryClient}>
+      <GoogleFonts />
       <TooltipProvider>
         <Toaster />
         <Sonner />

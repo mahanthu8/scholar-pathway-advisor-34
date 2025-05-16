@@ -1,88 +1,117 @@
 
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Twitter } from "lucide-react";
+import { Instagram, Facebook, Twitter, ArrowUp } from "lucide-react";
 
 export function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
   return (
-    <footer className="bg-white border-t border-gray-200 mt-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold text-edu-primary mb-4">EduPathfinder</h3>
-            <p className="text-gray-600 text-sm">
-              Helping students make informed decisions about their academic future after PUC.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium text-gray-900 mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/" className="text-gray-600 hover:text-edu-primary text-sm">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/degrees" className="text-gray-600 hover:text-edu-primary text-sm">
-                  Degrees
-                </Link>
-              </li>
-              <li>
-                <Link to="/colleges" className="text-gray-600 hover:text-edu-primary text-sm">
-                  Colleges
-                </Link>
-              </li>
-              <li>
-                <Link to="/register" className="text-gray-600 hover:text-edu-primary text-sm">
-                  Register
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-medium text-gray-900 mb-4">Resources</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/eligibility" className="text-gray-600 hover:text-edu-primary text-sm">
-                  Eligibility Criteria
-                </Link>
-              </li>
-              <li>
-                <Link to="/careers" className="text-gray-600 hover:text-edu-primary text-sm">
-                  Career Prospects
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" className="text-gray-600 hover:text-edu-primary text-sm">
-                  FAQ
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-medium text-gray-900 mb-4">Contact</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Email: ananyama09@gmail.com
-            </p>
-            <p className="text-gray-600 text-sm">
-              Phone: +91 8618714564
-            </p>
-            <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-edu-primary hover:text-edu-dark">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-edu-primary hover:text-edu-dark">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="text-edu-primary hover:text-edu-dark">
-                <Instagram size={20} />
-              </a>
+    <footer className="relative">
+      <div className="wave-divider">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute bottom-0 w-full h-20 fill-white dark:fill-gray-900">
+          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
+      </div>
+      
+      <div className="bg-white dark:bg-gray-900 pt-12 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="text-center md:text-left">
+              <h3 className="text-lg font-semibold text-gradient mb-4">EduPathfinder</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                Helping students make informed decisions about their academic future after PUC.
+              </p>
+              <button 
+                onClick={scrollToTop}
+                className="mt-4 group flex items-center text-edu-primary hover:text-purple-700 transition-all"
+              >
+                <ArrowUp className="h-4 w-4 mr-1 group-hover:-translate-y-1 transition-transform" />
+                <span>Back to top</span>
+              </button>
+            </div>
+            <div>
+              <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-4 relative inline-block after:content-[''] after:block after:w-1/2 after:h-0.5 after:bg-edu-primary after:mt-1">Quick Links</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
+                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    <span>Home</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/degrees" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
+                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    <span>Degrees</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/colleges" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
+                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    <span>Colleges</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
+                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    <span>Register</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-4 relative inline-block after:content-[''] after:block after:w-1/2 after:h-0.5 after:bg-edu-primary after:mt-1">Resources</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/eligibility" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
+                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    <span>Eligibility Criteria</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/careers" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
+                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    <span>Career Prospects</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/faq" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
+                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    <span>FAQ</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-4 relative inline-block after:content-[''] after:block after:w-1/2 after:h-0.5 after:bg-edu-primary after:mt-1">Contact</h4>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                Email: ananyama09@gmail.com
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                Phone: +91 8618714564
+              </p>
+              <div className="flex space-x-4 mt-4">
+                <a href="#" className="text-edu-primary hover:text-edu-dark transition-transform hover:scale-110">
+                  <Facebook size={20} />
+                </a>
+                <a href="#" className="text-edu-primary hover:text-edu-dark transition-transform hover:scale-110">
+                  <Twitter size={20} />
+                </a>
+                <a href="#" className="text-edu-primary hover:text-edu-dark transition-transform hover:scale-110">
+                  <Instagram size={20} />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="border-t border-gray-200 mt-8 pt-6 text-center">
-          <p className="text-sm text-gray-600">
-            &copy; {new Date().getFullYear()} EduPathfinder. All rights reserved.
-          </p>
+          <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-6 text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              &copy; {new Date().getFullYear()} EduPathfinder. All rights reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
