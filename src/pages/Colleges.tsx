@@ -1,3 +1,4 @@
+
 import { Layout } from "@/components/Layout";
 import { CollegeCard } from "@/components/CollegeCard";
 import { colleges, degrees } from "@/data/mockData";
@@ -82,7 +83,7 @@ const Colleges = () => {
                       <SelectValue placeholder="Location" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Locations</SelectItem>
+                      <SelectItem value="all-locations">All Locations</SelectItem>
                       {locations.map((location) => (
                         <SelectItem key={location} value={location}>
                           {location}
@@ -98,7 +99,7 @@ const Colleges = () => {
                       <SelectValue placeholder="Affiliation" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Affiliations</SelectItem>
+                      <SelectItem value="all-affiliations">All Affiliations</SelectItem>
                       {affiliations.map((affiliation) => (
                         <SelectItem key={affiliation} value={affiliation}>
                           {affiliation}
