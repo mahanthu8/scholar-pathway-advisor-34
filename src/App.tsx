@@ -68,7 +68,7 @@ const App = () => {
           'service_edupath',
           'template_chatrequest',
           templateParams,
-          'YOUR_USER_ID'
+          'lcoIppQEnR3Y1wMdM'  // Updated to use the actual user ID
         );
         
         console.log('Website visit notification sent');

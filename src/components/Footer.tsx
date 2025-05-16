@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, ArrowUp, MessageCircle, MapPin, Book, Calendar, Link as LinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
@@ -31,12 +32,11 @@ export function Footer() {
       };
       
       // Send email using EmailJS
-      // Note: You'll need to create an account on EmailJS and set up your service, template, and user ID
       const result = await emailjs.send(
-        'service_edupath', // Replace with your actual service ID
-        'template_chatrequest', // Replace with your actual template ID
+        'service_edupath',
+        'template_chatrequest',
         templateParams,
-        'YOUR_USER_ID' // Replace with your actual user ID
+        'lcoIppQEnR3Y1wMdM'  // Updated to use the actual user ID
       );
       
       if (result.status === 200) {
