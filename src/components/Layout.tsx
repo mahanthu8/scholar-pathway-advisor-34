@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { motion } from "framer-motion";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ export function Layout({ children }: LayoutProps) {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [colorIndex, setColorIndex] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [showInitialAnimation, setShowInitialAnimation] = useState(true);
   
   // Array of pastel colors for background transitions
   const pastelColors = [
@@ -44,6 +46,11 @@ export function Layout({ children }: LayoutProps) {
       setColorIndex((prevIndex) => (prevIndex + 1) % pastelColors.length);
     }, 8000); // Change color every 8 seconds
 
+    // Hide initial animation after it completes
+    const animationTimer = setTimeout(() => {
+      setShowInitialAnimation(false);
+    }, 2500);
+
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("mousemove", handleMouseMove);
     
@@ -51,6 +58,7 @@ export function Layout({ children }: LayoutProps) {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mousemove", handleMouseMove);
       clearInterval(colorInterval);
+      clearTimeout(animationTimer);
     };
   }, []);
 
@@ -59,8 +67,48 @@ export function Layout({ children }: LayoutProps) {
   const mouseParallaxX = mousePosition.x * 20 - 10;
   const mouseParallaxY = mousePosition.y * 20 - 10;
 
+  if (showInitialAnimation) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background z-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center"
+        >
+          <motion.h1 
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient-animated"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            EduPathfinder
+          </motion.h1>
+          <motion.div
+            className="mt-4"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+          >
+            <p className="text-muted-foreground">Find your perfect educational path</p>
+            <div className="mt-6 flex justify-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-pastel-blue animate-pulse"></span>
+              <span className="w-3 h-3 rounded-full bg-pastel-teal animate-pulse" style={{ animationDelay: "0.2s" }}></span>
+              <span className="w-3 h-3 rounded-full bg-pastel-pink animate-pulse" style={{ animationDelay: "0.4s" }}></span>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`flex flex-col min-h-screen transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className={`flex flex-col min-h-screen transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+    >
       {/* Advanced animated background with multiple layers */}
       <div 
         className={`fixed inset-0 -z-20 hero-pattern transition-colors duration-3000 ${pastelColors[colorIndex]}`}
@@ -86,8 +134,16 @@ export function Layout({ children }: LayoutProps) {
       
       {/* Main content */}
       <Header />
-      <main className="flex-grow relative">{children}</main>
+      <main className="flex-grow relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          {children}
+        </motion.div>
+      </main>
       <Footer />
-    </div>
+    </motion.div>
   );
 }
