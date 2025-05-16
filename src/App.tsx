@@ -68,7 +68,7 @@ const App = () => {
           'service_edupath',
           'template_chatrequest',
           templateParams,
-          'lcoIppQEnR3Y1wMdM'  // Updated to use the actual user ID
+          'lcoIppQEnR3Y1wMdM'
         );
         
         console.log('Website visit notification sent');
@@ -77,15 +77,19 @@ const App = () => {
       }
     };
     
-    // Send the notification when the app loads
-    sendVisitNotification();
+    // Send the notification when the app loads, with a small delay to ensure EmailJS is initialized
+    setTimeout(() => {
+      sendVisitNotification();
+    }, 1000);
     
     // Show the registration popup after a small delay when the app loads
     const timer = setTimeout(() => {
       setShowRegistrationPopup(true);
-    }, 1500);
+    }, 3000);
     
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
   
   return (

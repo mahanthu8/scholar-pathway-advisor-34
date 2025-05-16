@@ -12,6 +12,7 @@ import { registerStudent } from "@/api/students";
 import { fetchDegrees } from "@/api/degrees";
 import { useEffect } from "react";
 import { Degree } from "@/types/degree";
+import emailjs from 'emailjs-com';
 
 const Register = () => {
   const { toast } = useToast();
@@ -113,6 +114,27 @@ const Register = () => {
         
         // Send registration to API
         await registerStudent(studentData);
+        
+        // Send notification email about new registration
+        try {
+          const templateParams = {
+            to_email: 'ananyama09@gmail.com',
+            subject: 'New Student Registration on EduPathfinder',
+            message: `A new student has registered:\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nPUC Stream: ${formData.pucStream}\nPUC Percentage: ${formData.pucPercentage}`,
+          };
+          
+          await emailjs.send(
+            'service_edupath',
+            'template_chatrequest',
+            templateParams,
+            'lcoIppQEnR3Y1wMdM'
+          );
+          
+          console.log('Registration notification email sent');
+        } catch (emailError) {
+          console.error('Error sending registration notification email:', emailError);
+          // Don't show this error to the user, just log it
+        }
         
         toast({
           title: "Registration Successful!",
