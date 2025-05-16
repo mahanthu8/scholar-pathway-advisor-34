@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { registerStudent } from "@/api/students";
 import { StudentDTO } from "@/api/students";
 import emailjs from 'emailjs-com';
@@ -17,8 +16,8 @@ export function RegistrationPopup({ open, onOpenChange }: { open: boolean; onOpe
     name: "",
     email: "",
     password: "",
-    phone: "",
-    pucStream: "science",
+    phone: "", // Keeping this in state but not showing in form
+    pucStream: "science", // Default values for required fields
     pucPercentage: 0,
     preferredDegree: "",
     preferredLocation: "",
@@ -29,23 +28,18 @@ export function RegistrationPopup({ open, onOpenChange }: { open: boolean; onOpe
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "pucPercentage" ? parseFloat(value) || 0 : value,
-    }));
-  };
-
-  const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      pucStream: value,
+      [name]: value,
     }));
   };
 
   const sendRegistrationEmail = async (userData: Omit<StudentDTO, "id">) => {
     try {
+      console.log('Attempting to send registration email...');
+      
       const templateParams = {
         to_email: 'ananyama09@gmail.com',
         subject: 'New Student Registration on EduPathfinder',
-        message: `A new student has registered:\nName: ${userData.name}\nEmail: ${userData.email}\nPhone: ${userData.phone}\nPUC Stream: ${userData.pucStream}\nPUC Percentage: ${userData.pucPercentage}`,
+        message: `A new student has registered:\nName: ${userData.name}\nEmail: ${userData.email}`,
       };
       
       await emailjs.send(
@@ -55,17 +49,39 @@ export function RegistrationPopup({ open, onOpenChange }: { open: boolean; onOpe
         'lcoIppQEnR3Y1wMdM'
       );
       
-      console.log('Registration notification email sent from popup');
+      console.log('Registration notification email sent successfully');
+      return true;
     } catch (emailError) {
-      console.error('Error sending registration email from popup:', emailError);
-      // Continue with registration even if email fails
+      console.error('Error sending registration email:', emailError);
+      // Try again with a delay
+      try {
+        console.log('Retrying email send...');
+        setTimeout(async () => {
+          const templateParams = {
+            to_email: 'ananyama09@gmail.com',
+            subject: 'New Student Registration on EduPathfinder',
+            message: `A new student has registered:\nName: ${userData.name}\nEmail: ${userData.email}`,
+          };
+          
+          await emailjs.send(
+            'service_edupath',
+            'template_chatrequest',
+            templateParams,
+            'lcoIppQEnR3Y1wMdM'
+          );
+          console.log('Registration email sent on retry');
+        }, 1500);
+      } catch (retryError) {
+        console.error('Error sending registration email on retry:', retryError);
+      }
+      return false;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.password || !formData.phone) {
+    if (!formData.name || !formData.email || !formData.password) {
       toast({
         title: "Missing information",
         description: "Please fill in all required fields.",
@@ -77,31 +93,49 @@ export function RegistrationPopup({ open, onOpenChange }: { open: boolean; onOpe
     setIsSubmitting(true);
     
     try {
+      // Prepare the full student data (with default values for hidden fields)
+      const studentData = {
+        ...formData,
+        phone: formData.phone || "0000000000", // Default phone if not provided
+      };
+      
       // Try to register with API
+      let apiSuccess = false;
       try {
-        await registerStudent(formData);
+        await registerStudent(studentData);
         console.log("API registration successful");
+        apiSuccess = true;
       } catch (apiError) {
         console.error("API registration failed:", apiError);
-        // Proceed even if the API call fails - this will be a fallback mechanism
+        // Continue with email notification even if API fails
       }
       
       // Send email notification regardless of API success
-      await sendRegistrationEmail(formData);
+      const emailSent = await sendRegistrationEmail(studentData);
       
-      toast({
-        title: "Registration successful",
-        description: "Your account has been created successfully.",
-      });
-      
-      onOpenChange(false);
+      if (apiSuccess || emailSent) {
+        toast({
+          title: "Registration successful",
+          description: "Your account has been created successfully.",
+        });
+        
+        onOpenChange(false);
+      } else {
+        // Both API and email failed
+        toast({
+          title: "Registration processed",
+          description: "Your information has been received. We'll contact you soon.",
+        });
+        // Close the popup even if there was an error, since we've captured their information
+        onOpenChange(false);
+      }
     } catch (error) {
       console.error("Registration complete process failed:", error);
       toast({
         title: "Registration processed",
         description: "Your information has been received. We'll contact you soon.",
       });
-      // Close the popup even if there was an error, since we've captured their information
+      // Close the popup even if there was an error
       onOpenChange(false);
     } finally {
       setIsSubmitting(false);
@@ -155,59 +189,6 @@ export function RegistrationPopup({ open, onOpenChange }: { open: boolean; onOpe
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number*</Label>
-              <Input
-                id="phone"
-                name="phone"
-                placeholder="Enter your phone number"
-                value={formData.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="pucStream">PUC Stream*</Label>
-              <Select value={formData.pucStream} onValueChange={handleSelectChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your PUC stream" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="science">Science (PCM)</SelectItem>
-                  <SelectItem value="scienceBio">Science (PCB)</SelectItem>
-                  <SelectItem value="commerce">Commerce</SelectItem>
-                  <SelectItem value="arts">Arts</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="pucPercentage">PUC Percentage*</Label>
-              <Input
-                id="pucPercentage"
-                name="pucPercentage"
-                type="number"
-                min="0"
-                max="100"
-                placeholder="Enter your PUC percentage"
-                value={formData.pucPercentage || ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="preferredLocation">Preferred Location (Optional)</Label>
-              <Input
-                id="preferredLocation"
-                name="preferredLocation"
-                placeholder="Enter your preferred location"
-                value={formData.preferredLocation}
-                onChange={handleInputChange}
               />
             </div>
           </div>

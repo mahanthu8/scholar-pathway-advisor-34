@@ -18,6 +18,7 @@ export const initializeEmailJS = () => {
 // Helper function to verify if EmailJS can send emails
 export const testEmailJSConnection = async (): Promise<boolean> => {
   try {
+    console.log('Testing EmailJS connection...');
     // Small test to verify connection
     await emailjs.send(
       'service_edupath',
@@ -35,4 +36,35 @@ export const testEmailJSConnection = async (): Promise<boolean> => {
     console.error('EmailJS connection test failed:', error);
     return false;
   }
+};
+
+// Helper function to send emails with retry capability
+export const sendEmail = async (templateParams: any, retries = 2): Promise<boolean> => {
+  let attempts = 0;
+  
+  const attemptSend = async (): Promise<boolean> => {
+    try {
+      await emailjs.send(
+        'service_edupath',
+        'template_chatrequest',
+        templateParams,
+        'lcoIppQEnR3Y1wMdM'
+      );
+      console.log('Email sent successfully');
+      return true;
+    } catch (error) {
+      attempts++;
+      console.error(`Email sending failed (attempt ${attempts}/${retries + 1}):`, error);
+      
+      if (attempts <= retries) {
+        console.log(`Retrying in ${attempts * 1000}ms...`);
+        await new Promise(resolve => setTimeout(resolve, attempts * 1000));
+        return attemptSend();
+      }
+      
+      return false;
+    }
+  };
+  
+  return attemptSend();
 };

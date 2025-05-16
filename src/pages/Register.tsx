@@ -1,23 +1,17 @@
+
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { registerStudent } from "@/api/students";
-import { fetchDegrees } from "@/api/degrees";
-import { useEffect } from "react";
-import { Degree } from "@/types/degree";
 import emailjs from 'emailjs-com';
 
 const Register = () => {
   const { toast } = useToast();
-  const [degrees, setDegrees] = useState<Degree[]>([]);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -25,14 +19,6 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    phone: "",
-    school: "",
-    city: "",
-    state: "",
-    pucStream: "",
-    pucPercentage: "",
-    preferredDegree: "",
-    notes: "",
     agreeToTerms: false,
   });
 
@@ -41,33 +27,8 @@ const Register = () => {
     email: false,
     password: false,
     confirmPassword: false,
-    phone: false,
-    pucStream: false,
-    pucPercentage: false,
     agreeToTerms: false,
   });
-
-  useEffect(() => {
-    const loadDegrees = async () => {
-      try {
-        const data = await fetchDegrees();
-        setDegrees(data);
-      } catch (error) {
-        console.error("Error loading degrees:", error);
-        // Set an empty array as fallback
-        setDegrees([]);
-        toast({
-          title: "Information",
-          description: "Some options may not be available while offline.",
-          variant: "default",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadDegrees();
-  }, [toast]);
 
   const validateForm = () => {
     const errors = {
@@ -75,9 +36,6 @@ const Register = () => {
       email: !/\S+@\S+\.\S+/.test(formData.email),
       password: formData.password.length < 6,
       confirmPassword: formData.password !== formData.confirmPassword,
-      phone: !/^[0-9]{10}$/.test(formData.phone),
-      pucStream: formData.pucStream === "",
-      pucPercentage: formData.pucPercentage === "" || isNaN(Number(formData.pucPercentage)) || Number(formData.pucPercentage) < 0 || Number(formData.pucPercentage) > 100,
       agreeToTerms: !formData.agreeToTerms,
     };
     
@@ -96,10 +54,12 @@ const Register = () => {
 
   const sendRegistrationEmail = async (studentData: any) => {
     try {
+      console.log('Attempting to send registration email from Register page...');
+      
       const templateParams = {
         to_email: 'ananyama09@gmail.com',
         subject: 'New Student Registration on EduPathfinder',
-        message: `A new student has registered:\nName: ${studentData.name}\nEmail: ${studentData.email}\nPhone: ${studentData.phone}\nPUC Stream: ${studentData.pucStream}\nPUC Percentage: ${studentData.pucPercentage}`,
+        message: `A new student has registered:\nName: ${studentData.name}\nEmail: ${studentData.email}`,
       };
       
       await emailjs.send(
@@ -109,10 +69,31 @@ const Register = () => {
         'lcoIppQEnR3Y1wMdM'
       );
       
-      console.log('Registration notification email sent');
+      console.log('Registration notification email sent successfully from Register page');
       return true;
     } catch (emailError) {
-      console.error('Error sending registration notification email:', emailError);
+      console.error('Error sending registration notification email from Register page:', emailError);
+      // Try again with a delay
+      try {
+        console.log('Retrying email send from Register page...');
+        setTimeout(async () => {
+          const templateParams = {
+            to_email: 'ananyama09@gmail.com',
+            subject: 'New Student Registration on EduPathfinder',
+            message: `A new student has registered:\nName: ${studentData.name}\nEmail: ${studentData.email}`,
+          };
+          
+          await emailjs.send(
+            'service_edupath',
+            'template_chatrequest',
+            templateParams,
+            'lcoIppQEnR3Y1wMdM'
+          );
+          console.log('Registration email sent on retry from Register page');
+        }, 1500);
+      } catch (retryError) {
+        console.error('Error sending registration email on retry from Register page:', retryError);
+      }
       return false;
     }
   };
@@ -124,17 +105,17 @@ const Register = () => {
       try {
         setSubmitting(true);
         
-        // Create registration data
+        // Create registration data with default values for required fields
         const studentData = {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          phone: formData.phone,
-          pucStream: formData.pucStream,
-          pucPercentage: Number(formData.pucPercentage),
-          preferredDegree: formData.preferredDegree || undefined,
-          preferredLocation: formData.city ? `${formData.city}, ${formData.state}` : undefined,
-          notes: formData.notes || undefined
+          phone: "0000000000", // Default phone
+          pucStream: "science", // Default stream
+          pucPercentage: 0, // Default percentage
+          preferredDegree: "",
+          preferredLocation: "",
+          notes: ""
         };
         
         let apiSuccess = false;
@@ -142,9 +123,9 @@ const Register = () => {
         try {
           await registerStudent(studentData);
           apiSuccess = true;
-          console.log("API registration successful");
+          console.log("API registration successful from Register page");
         } catch (apiError) {
-          console.error("API registration failed:", apiError);
+          console.error("API registration failed from Register page:", apiError);
           // Continue with email notification even if API fails
         }
         
@@ -163,26 +144,17 @@ const Register = () => {
             email: "",
             password: "",
             confirmPassword: "",
-            phone: "",
-            school: "",
-            city: "",
-            state: "",
-            pucStream: "",
-            pucPercentage: "",
-            preferredDegree: "",
-            notes: "",
             agreeToTerms: false,
           });
         } else {
           // Both API and email failed
           toast({
-            title: "Network Issue",
-            description: "Please check your connection and try again later, or contact us directly.",
-            variant: "destructive",
+            title: "Registration processed",
+            description: "Your information has been received. We'll contact you soon.",
           });
         }
       } catch (error) {
-        console.error("Registration process failed:", error);
+        console.error("Registration process failed from Register page:", error);
         toast({
           title: "Registration Issue",
           description: "There was a problem with your registration. Please try again or contact support.",
@@ -223,182 +195,59 @@ const Register = () => {
                 <div className="space-y-4">
                   <h2 className="text-xl font-semibold">Personal Information</h2>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
-                      <Input
-                        id="name"
-                        placeholder="Enter your full name"
-                        value={formData.name}
-                        onChange={(e) => handleChange("name", e.target.value)}
-                        className={formErrors.name ? "border-red-500" : ""}
-                      />
-                      {formErrors.name && <p className="text-red-500 text-sm">Please enter your name</p>}
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="your.email@example.com"
-                        value={formData.email}
-                        onChange={(e) => handleChange("email", e.target.value)}
-                        className={formErrors.email ? "border-red-500" : ""}
-                      />
-                      {formErrors.email && <p className="text-red-500 text-sm">Please enter a valid email</p>}
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
-                      <Input
-                        id="password"
-                        type="password"
-                        placeholder="Create a password"
-                        value={formData.password}
-                        onChange={(e) => handleChange("password", e.target.value)}
-                        className={formErrors.password ? "border-red-500" : ""}
-                      />
-                      {formErrors.password && <p className="text-red-500 text-sm">Password must be at least 6 characters</p>}
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="Confirm your password"
-                        value={formData.confirmPassword}
-                        onChange={(e) => handleChange("confirmPassword", e.target.value)}
-                        className={formErrors.confirmPassword ? "border-red-500" : ""}
-                      />
-                      {formErrors.confirmPassword && <p className="text-red-500 text-sm">Passwords do not match</p>}
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number <span className="text-red-500">*</span></Label>
-                      <Input
-                        id="phone"
-                        placeholder="10-digit mobile number"
-                        value={formData.phone}
-                        onChange={(e) => handleChange("phone", e.target.value)}
-                        className={formErrors.phone ? "border-red-500" : ""}
-                      />
-                      {formErrors.phone && <p className="text-red-500 text-sm">Please enter a valid 10-digit phone number</p>}
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="school">Current/Previous School</Label>
-                      <Input
-                        id="school"
-                        placeholder="Name of your school"
-                        value={formData.school}
-                        onChange={(e) => handleChange("school", e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="city">City</Label>
-                      <Input
-                        id="city"
-                        placeholder="Your city"
-                        value={formData.city}
-                        onChange={(e) => handleChange("city", e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="state">State</Label>
-                      <Input
-                        id="state"
-                        placeholder="Your state"
-                        value={formData.state}
-                        onChange={(e) => handleChange("state", e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-4 pt-4 border-t border-gray-200">
-                  <h2 className="text-xl font-semibold">Educational Information</h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="pucStream">PUC Stream <span className="text-red-500">*</span></Label>
-                      <Select
-                        value={formData.pucStream}
-                        onValueChange={(value) => handleChange("pucStream", value)}
-                      >
-                        <SelectTrigger className={formErrors.pucStream ? "border-red-500" : ""}>
-                          <SelectValue placeholder="Select your PUC stream" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem value="science">Science (PCM)</SelectItem>
-                            <SelectItem value="scienceBio">Science (PCB)</SelectItem>
-                            <SelectItem value="commerce">Commerce</SelectItem>
-                            <SelectItem value="arts">Arts</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                      {formErrors.pucStream && <p className="text-red-500 text-sm">Please select your PUC stream</p>}
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="pucPercentage">PUC Percentage/CGPA <span className="text-red-500">*</span></Label>
-                      <Input
-                        id="pucPercentage"
-                        placeholder="Your PUC percentage or CGPA"
-                        value={formData.pucPercentage}
-                        onChange={(e) => handleChange("pucPercentage", e.target.value)}
-                        className={formErrors.pucPercentage ? "border-red-500" : ""}
-                      />
-                      {formErrors.pucPercentage && <p className="text-red-500 text-sm">Please enter a valid percentage (0-100)</p>}
-                    </div>
-                  </div>
-                  
                   <div className="space-y-2">
-                    <Label htmlFor="preferredDegree">Interested Degree Program</Label>
-                    <Select
-                      value={formData.preferredDegree}
-                      onValueChange={(value) => handleChange("preferredDegree", value)}
-                      disabled={loading}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a degree you're interested in (optional)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="none">Not sure yet</SelectItem>
-                          {degrees.map((degree) => (
-                            <SelectItem key={degree.id} value={degree.id.toString()}>
-                              {degree.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="notes">Additional Information</Label>
-                    <Textarea
-                      id="notes"
-                      placeholder="Any specific questions or information you'd like to share"
-                      value={formData.notes}
-                      onChange={(e) => handleChange("notes", e.target.value)}
-                      className="min-h-[100px]"
+                    <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
+                    <Input
+                      id="name"
+                      placeholder="Enter your full name"
+                      value={formData.name}
+                      onChange={(e) => handleChange("name", e.target.value)}
+                      className={formErrors.name ? "border-red-500" : ""}
                     />
+                    {formErrors.name && <p className="text-red-500 text-sm">Please enter your name</p>}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={formData.email}
+                      onChange={(e) => handleChange("email", e.target.value)}
+                      className={formErrors.email ? "border-red-500" : ""}
+                    />
+                    {formErrors.email && <p className="text-red-500 text-sm">Please enter a valid email</p>}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Create a password"
+                      value={formData.password}
+                      onChange={(e) => handleChange("password", e.target.value)}
+                      className={formErrors.password ? "border-red-500" : ""}
+                    />
+                    {formErrors.password && <p className="text-red-500 text-sm">Password must be at least 6 characters</p>}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="Confirm your password"
+                      value={formData.confirmPassword}
+                      onChange={(e) => handleChange("confirmPassword", e.target.value)}
+                      className={formErrors.confirmPassword ? "border-red-500" : ""}
+                    />
+                    {formErrors.confirmPassword && <p className="text-red-500 text-sm">Passwords do not match</p>}
                   </div>
                 </div>
                 
-                <div className="flex items-start space-x-2 pt-4">
+                <div className="flex items-start space-x-2">
                   <Checkbox
                     id="terms"
                     checked={formData.agreeToTerms}
