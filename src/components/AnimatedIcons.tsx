@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { School, GraduationCap, Book, Briefcase, Users, Code, Calculator, Flask, Leaf } from "lucide-react";
+import { School, GraduationCap, Book, Briefcase, Users, Code, Calculator, Activity, Leaf } from "lucide-react";
 
 export const AnimatedIcons = () => {
   const streamIcons = [
@@ -11,7 +11,7 @@ export const AnimatedIcons = () => {
     { icon: <Users />, label: "Management", color: "bg-pastel-amber" },
     { icon: <Code />, label: "Computer Science", color: "bg-pastel-teal" },
     { icon: <Calculator />, label: "Mathematics", color: "bg-pastel-purple" },
-    { icon: <Flask />, label: "Science", color: "bg-pastel-blue" },
+    { icon: <Activity />, label: "Science", color: "bg-pastel-blue" },
     { icon: <Leaf />, label: "Agriculture", color: "bg-pastel-teal" },
   ];
 

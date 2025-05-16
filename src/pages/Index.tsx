@@ -14,6 +14,7 @@ import { AnimatedIcons } from "@/components/AnimatedIcons";
 import { TrendingCareers } from "@/components/TrendingCareers";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { TopColleges } from "@/components/TopColleges";
+import { CollegeCard } from "@/components/CollegeCard"; // Add this import
 
 const Index = () => {
   const featuredDegrees = degrees.slice(0, 4);
