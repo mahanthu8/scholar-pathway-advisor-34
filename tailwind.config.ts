@@ -64,11 +64,11 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				edu: {
-					primary: '#9b87f5',     // Updated to purple
-					secondary: '#7E69AB',   // Updated to secondary purple
-					accent: '#D6BCFA',      // Updated to light purple
-					light: '#E5DEFF',       // Updated to soft purple
-					dark: '#6E59A5',        // Updated to tertiary purple
+					primary: '#B89F7A',     // Light brown primary
+					secondary: '#D2C2A5',   // Lighter brown secondary
+					accent: '#E5DBC8',      // Very light brown accent
+					light: '#F5F0E6',       // Softest brown light
+					dark: '#8C7A5B',        // Darker brown
 				},
 				pastel: {
 					blue: '#d6e6ff',
@@ -78,6 +78,8 @@ export default {
 					orange: '#fff0d4',
 					pink: '#fbe0e0',
 					purple: '#e5d4ef',
+					brown: '#E5DBC8',       // Added pastel brown
+					lightBrown: '#F5F0E6',  // Added light pastel brown
 				}
 			},
 			borderRadius: {
