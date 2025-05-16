@@ -46,7 +46,7 @@ const GoogleFonts = () => {
 };
 
 const App = () => {
-  const [showRegistrationPopup, setShowRegistrationPopup] = useState(false); // Default set to false now
+  const [showRegistrationPopup, setShowRegistrationPopup] = useState(false);
   const [emailServiceInitialized, setEmailServiceInitialized] = useState(false);
   
   useEffect(() => {
