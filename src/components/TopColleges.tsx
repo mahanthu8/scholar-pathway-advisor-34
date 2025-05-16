@@ -22,7 +22,7 @@ export const TopColleges = ({ colleges, degrees }: TopCollegesProps) => {
     .slice(0, 3);
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">Top Colleges 2025</h2>
@@ -42,7 +42,7 @@ export const TopColleges = ({ colleges, degrees }: TopCollegesProps) => {
         </div>
         
         <div className="flex justify-center mt-8">
-          <Button asChild>
+          <Button asChild className="bg-primary hover:bg-primary/90">
             <Link to="/colleges" className="flex items-center gap-2">
               Explore All Colleges
             </Link>

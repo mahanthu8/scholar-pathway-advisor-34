@@ -64,11 +64,11 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				edu: {
-					primary: '#1e3a8a',
-					secondary: '#3b82f6',
-					accent: '#93c5fd',
-					light: '#dbeafe',
-					dark: '#1e40af',
+					primary: '#9b87f5',     // Updated to purple
+					secondary: '#7E69AB',   // Updated to secondary purple
+					accent: '#D6BCFA',      // Updated to light purple
+					light: '#E5DEFF',       // Updated to soft purple
+					dark: '#6E59A5',        // Updated to tertiary purple
 				},
 				pastel: {
 					blue: '#d6e6ff',
