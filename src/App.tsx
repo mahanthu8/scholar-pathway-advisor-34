@@ -15,6 +15,7 @@ import Careers from "./pages/Careers";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import { RegistrationPopup } from "./components/RegistrationPopup";
+import { ChatBox } from "./components/ChatBox";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => {
           open={showRegistrationPopup} 
           onOpenChange={setShowRegistrationPopup} 
         />
+        <ChatBox />
       </TooltipProvider>
     </QueryClientProvider>
   );
