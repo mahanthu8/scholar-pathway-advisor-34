@@ -10,11 +10,9 @@ import { getEligibleDegrees } from "@/utils/eligibilityFilter";
 import { useToast } from "@/hooks/use-toast";
 import { College } from "@/types/college";
 import { fetchCollegesByKcetRank } from "@/api/supabaseService";
-import { AnimatedIcons } from "@/components/AnimatedIcons";
-import { TrendingCareers } from "@/components/TrendingCareers";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { TopColleges } from "@/components/TopColleges";
-import { CollegeCard } from "@/components/CollegeCard"; // Add this import
+import { CollegeCard } from "@/components/CollegeCard";
 
 const Index = () => {
   const featuredDegrees = degrees.slice(0, 4);
@@ -129,9 +127,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Animated Stream Icons */}
-      <AnimatedIcons />
-
       {/* Results Section - Only shows after submitting the form */}
       {(eligibleDegrees.length > 0 || matchingColleges.length > 0 || kcetColleges.length > 0) && (
         <section className="py-16 bg-gray-50" id="results-section">
@@ -207,9 +202,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-      
-      {/* Trending Careers Section */}
-      <TrendingCareers />
       
       {/* Top Colleges Section */}
       <TopColleges colleges={colleges} degrees={degrees} />
