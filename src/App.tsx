@@ -46,7 +46,7 @@ const GoogleFonts = () => {
 };
 
 const App = () => {
-  const [showRegistrationPopup, setShowRegistrationPopup] = useState(false);
+  const [showRegistrationPopup, setShowRegistrationPopup] = useState(false); // Default set to false now
   const [emailServiceInitialized, setEmailServiceInitialized] = useState(false);
   
   useEffect(() => {
@@ -109,14 +109,7 @@ const App = () => {
     
     attemptSendNotification();
     
-    // Show the registration popup after a delay when the app loads
-    const timer = setTimeout(() => {
-      setShowRegistrationPopup(true);
-    }, 3000);
-    
-    return () => {
-      clearTimeout(timer);
-    };
+    // Removed the timer that automatically shows the registration popup
   }, []);
   
   return (

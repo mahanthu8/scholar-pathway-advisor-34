@@ -10,7 +10,6 @@ import { getEligibleDegrees } from "@/utils/eligibilityFilter";
 import { useToast } from "@/hooks/use-toast";
 import { College } from "@/types/college";
 import { fetchCollegesByKcetRank } from "@/api/supabaseService";
-import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { TopColleges } from "@/components/TopColleges";
 import { CollegeCard } from "@/components/CollegeCard";
 
@@ -205,9 +204,6 @@ const Index = () => {
       
       {/* Top Colleges Section */}
       <TopColleges colleges={colleges} degrees={degrees} />
-
-      {/* Testimonials Section */}
-      <TestimonialsCarousel />
 
       {/* Why Choose Us */}
       <section className="py-16">
