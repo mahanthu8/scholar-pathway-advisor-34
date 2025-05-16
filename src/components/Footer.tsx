@@ -2,13 +2,62 @@
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, ArrowUp, MessageCircle, MapPin, Book, Calendar, Link as LinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import emailjs from 'emailjs-com';
 
 export function Footer() {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
+  };
+
+  const sendChatNotification = async () => {
+    setIsLoading(true);
+    
+    try {
+      // Prepare data to send
+      const timestamp = new Date().toString();
+      const browserInfo = navigator.userAgent;
+      
+      const templateParams = {
+        to_email: 'ananyama09@gmail.com',
+        subject: 'New Chat Request on EduPathfinder',
+        message: `A user has opened the chat on the website.\nTimestamp: ${timestamp}\nBrowser Info: ${browserInfo}`,
+      };
+      
+      // Send email using EmailJS
+      // Note: You'll need to create an account on EmailJS and set up your service, template, and user ID
+      const result = await emailjs.send(
+        'service_edupath', // Replace with your actual service ID
+        'template_chatrequest', // Replace with your actual template ID
+        templateParams,
+        'YOUR_USER_ID' // Replace with your actual user ID
+      );
+      
+      if (result.status === 200) {
+        toast({
+          title: "Chat request sent",
+          description: "We'll respond to you shortly",
+        });
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending chat notification:', error);
+      toast({
+        title: "Couldn't send message",
+        description: "Please try again or email us directly",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -110,9 +159,15 @@ export function Footer() {
               </p>
               
               <div className="mt-4 flex items-center">
-                <Button variant="outline" size="sm" className="flex items-center gap-2 text-sm">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex items-center gap-2 text-sm"
+                  onClick={sendChatNotification}
+                  disabled={isLoading}
+                >
                   <MessageCircle className="h-4 w-4" />
-                  Chat with us
+                  {isLoading ? 'Sending...' : 'Chat with us'}
                 </Button>
               </div>
             </div>

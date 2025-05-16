@@ -16,6 +16,7 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import { RegistrationPopup } from "./components/RegistrationPopup";
 import { ChatBox } from "./components/ChatBox";
+import { initializeEmailJS } from "./utils/emailConfig";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,9 @@ const App = () => {
   const [showRegistrationPopup, setShowRegistrationPopup] = useState(false);
   
   useEffect(() => {
+    // Initialize EmailJS
+    initializeEmailJS();
+    
     // Check system preference for dark mode
     const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
     if (prefersDarkMode) {
