@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import { RegistrationPopup } from "./components/RegistrationPopup";
 import { ChatBox } from "./components/ChatBox";
 import { initializeEmailJS } from "./utils/emailConfig";
+import emailjs from 'emailjs-com';
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,35 @@ const App = () => {
     if (prefersDarkMode) {
       document.documentElement.classList.add("dark");
     }
+    
+    // Send website visit notification email
+    const sendVisitNotification = async () => {
+      try {
+        const timestamp = new Date().toString();
+        const browserInfo = navigator.userAgent;
+        const pageUrl = window.location.href;
+        
+        const templateParams = {
+          to_email: 'ananyama09@gmail.com',
+          subject: 'New Website Visit on EduPathfinder',
+          message: `Someone opened your website.\nTimestamp: ${timestamp}\nBrowser: ${browserInfo}\nURL: ${pageUrl}`,
+        };
+        
+        await emailjs.send(
+          'service_edupath',
+          'template_chatrequest',
+          templateParams,
+          'YOUR_USER_ID'
+        );
+        
+        console.log('Website visit notification sent');
+      } catch (error) {
+        console.error('Error sending visit notification:', error);
+      }
+    };
+    
+    // Send the notification when the app loads
+    sendVisitNotification();
     
     // Show the registration popup after a small delay when the app loads
     const timer = setTimeout(() => {
