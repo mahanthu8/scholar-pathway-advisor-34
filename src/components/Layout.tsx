@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { motion } from "framer-motion";
+import { ChatbotButton } from "./ChatbotButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -144,6 +145,7 @@ export function Layout({ children }: LayoutProps) {
         </motion.div>
       </main>
       <Footer />
+      <ChatbotButton />
     </motion.div>
   );
 }

@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Twitter, ArrowUp } from "lucide-react";
+import { Instagram, Facebook, Twitter, ArrowUp, MessageCircle, MapPin, Book, Calendar, Link as LinkIcon } from "lucide-react";
+import { Button } from "./ui/button";
 
 export function Footer() {
   const scrollToTop = () => {
@@ -33,31 +34,44 @@ export function Footer() {
                 <ArrowUp className="h-4 w-4 mr-1 group-hover:-translate-y-1 transition-transform" />
                 <span>Back to top</span>
               </button>
+              
+              <div className="mt-6 flex justify-center md:justify-start space-x-4">
+                <a href="#" className="bg-edu-light p-2 rounded-full text-edu-primary hover:bg-edu-primary hover:text-white transition-colors">
+                  <Facebook size={18} />
+                </a>
+                <a href="#" className="bg-edu-light p-2 rounded-full text-edu-primary hover:bg-edu-primary hover:text-white transition-colors">
+                  <Twitter size={18} />
+                </a>
+                <a href="#" className="bg-edu-light p-2 rounded-full text-edu-primary hover:bg-edu-primary hover:text-white transition-colors">
+                  <Instagram size={18} />
+                </a>
+              </div>
             </div>
+            
             <div>
               <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-4 relative inline-block after:content-[''] after:block after:w-1/2 after:h-0.5 after:bg-edu-primary after:mt-1">Quick Links</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
-                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <Link to="/" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center group">
+                    <LinkIcon className="mr-2 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span>Home</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/degrees" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
-                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <Link to="/degrees" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center group">
+                    <Book className="mr-2 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span>Degrees</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/colleges" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
-                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <Link to="/colleges" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center group">
+                    <MapPin className="mr-2 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span>Colleges</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/register" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
-                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <Link to="/register" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center group">
+                    <Calendar className="mr-2 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span>Register</span>
                   </Link>
                 </li>
@@ -67,20 +81,20 @@ export function Footer() {
               <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-4 relative inline-block after:content-[''] after:block after:w-1/2 after:h-0.5 after:bg-edu-primary after:mt-1">Resources</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/eligibility" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
-                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <Link to="/eligibility" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center group">
+                    <Book className="mr-2 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span>Eligibility Criteria</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/careers" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
-                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <Link to="/careers" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center group">
+                    <Book className="mr-2 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span>Career Prospects</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/faq" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center">
-                    <span className="mr-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <Link to="/faq" className="text-gray-600 dark:text-gray-400 hover:text-edu-primary dark:hover:text-edu-primary transition-colors text-sm flex items-center group">
+                    <Book className="mr-2 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span>FAQ</span>
                   </Link>
                 </li>
@@ -94,16 +108,12 @@ export function Footer() {
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Phone: +91 8618714564
               </p>
-              <div className="flex space-x-4 mt-4">
-                <a href="#" className="text-edu-primary hover:text-edu-dark transition-transform hover:scale-110">
-                  <Facebook size={20} />
-                </a>
-                <a href="#" className="text-edu-primary hover:text-edu-dark transition-transform hover:scale-110">
-                  <Twitter size={20} />
-                </a>
-                <a href="#" className="text-edu-primary hover:text-edu-dark transition-transform hover:scale-110">
-                  <Instagram size={20} />
-                </a>
+              
+              <div className="mt-4 flex items-center">
+                <Button variant="outline" size="sm" className="flex items-center gap-2 text-sm">
+                  <MessageCircle className="h-4 w-4" />
+                  Chat with us
+                </Button>
               </div>
             </div>
           </div>

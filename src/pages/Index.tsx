@@ -1,9 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { degrees, colleges } from "@/data/mockData";
 import { DegreeCard } from "@/components/DegreeCard";
-import { CollegeCard } from "@/components/CollegeCard";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -12,10 +10,13 @@ import { getEligibleDegrees } from "@/utils/eligibilityFilter";
 import { useToast } from "@/hooks/use-toast";
 import { College } from "@/types/college";
 import { fetchCollegesByKcetRank } from "@/api/supabaseService";
+import { AnimatedIcons } from "@/components/AnimatedIcons";
+import { TrendingCareers } from "@/components/TrendingCareers";
+import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
+import { TopColleges } from "@/components/TopColleges";
 
 const Index = () => {
   const featuredDegrees = degrees.slice(0, 4);
-  const featuredColleges = colleges.slice(0, 3);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [findingMatches, setFindingMatches] = useState(false);
   const [eligibleDegrees, setEligibleDegrees] = useState<typeof degrees>([]);
@@ -120,12 +121,15 @@ const Index = () => {
                 className="bg-white text-edu-primary hover:bg-gray-100"
                 onClick={() => setIsDialogOpen(true)}
               >
-                Find
+                Find Your Path
               </Button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Animated Stream Icons */}
+      <AnimatedIcons />
 
       {/* Results Section - Only shows after submitting the form */}
       {(eligibleDegrees.length > 0 || matchingColleges.length > 0 || kcetColleges.length > 0) && (
@@ -202,6 +206,15 @@ const Index = () => {
           </div>
         </div>
       </section>
+      
+      {/* Trending Careers Section */}
+      <TrendingCareers />
+      
+      {/* Top Colleges Section */}
+      <TopColleges colleges={colleges} degrees={degrees} />
+
+      {/* Testimonials Section */}
+      <TestimonialsCarousel />
 
       {/* Why Choose Us */}
       <section className="py-16">
@@ -287,27 +300,6 @@ const Index = () => {
                 Discover potential career paths and understand job prospects for each degree program.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Colleges */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Top Colleges</h2>
-            <Link to="/colleges" className="text-edu-primary hover:underline">
-              View All
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredColleges.map((college) => (
-              <CollegeCard 
-                key={college.id} 
-                college={college} 
-                degrees={degrees} 
-              />
-            ))}
           </div>
         </div>
       </section>
