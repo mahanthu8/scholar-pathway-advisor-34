@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, ArrowUp, MessageCircle, MapPin, Book, Calendar, Link as LinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
@@ -158,18 +157,6 @@ export function Footer() {
                 Phone: +91 8618714564
               </p>
               
-              <div className="mt-4 flex items-center">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex items-center gap-2 text-sm"
-                  onClick={sendChatNotification}
-                  disabled={isLoading}
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  {isLoading ? 'Sending...' : 'Chat with us'}
-                </Button>
-              </div>
             </div>
           </div>
           <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-6 text-center">
