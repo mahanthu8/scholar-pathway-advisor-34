@@ -69,6 +69,15 @@ export default {
 					accent: '#93c5fd',
 					light: '#dbeafe',
 					dark: '#1e40af',
+				},
+				pastel: {
+					blue: '#d6e6ff',
+					teal: '#d7f9f8',
+					yellow: '#ffffea',
+					amber: '#fff8df',
+					orange: '#fff0d4',
+					pink: '#fbe0e0',
+					purple: '#e5d4ef',
 				}
 			},
 			borderRadius: {
