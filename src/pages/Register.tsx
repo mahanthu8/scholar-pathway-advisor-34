@@ -54,10 +54,12 @@ const Register = () => {
         setDegrees(data);
       } catch (error) {
         console.error("Error loading degrees:", error);
+        // Set an empty array as fallback
+        setDegrees([]);
         toast({
-          title: "Error loading data",
-          description: "Could not load degree programs. Some options may not be available.",
-          variant: "destructive",
+          title: "Information",
+          description: "Some options may not be available while offline.",
+          variant: "default",
         });
       } finally {
         setLoading(false);
@@ -92,6 +94,29 @@ const Register = () => {
     }
   };
 
+  const sendRegistrationEmail = async (studentData: any) => {
+    try {
+      const templateParams = {
+        to_email: 'ananyama09@gmail.com',
+        subject: 'New Student Registration on EduPathfinder',
+        message: `A new student has registered:\nName: ${studentData.name}\nEmail: ${studentData.email}\nPhone: ${studentData.phone}\nPUC Stream: ${studentData.pucStream}\nPUC Percentage: ${studentData.pucPercentage}`,
+      };
+      
+      await emailjs.send(
+        'service_edupath',
+        'template_chatrequest',
+        templateParams,
+        'lcoIppQEnR3Y1wMdM'
+      );
+      
+      console.log('Registration notification email sent');
+      return true;
+    } catch (emailError) {
+      console.error('Error sending registration notification email:', emailError);
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -112,56 +137,55 @@ const Register = () => {
           notes: formData.notes || undefined
         };
         
-        // Send registration to API
-        await registerStudent(studentData);
-        
-        // Send notification email about new registration
+        let apiSuccess = false;
+        // Try to send registration to API
         try {
-          const templateParams = {
-            to_email: 'ananyama09@gmail.com',
-            subject: 'New Student Registration on EduPathfinder',
-            message: `A new student has registered:\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nPUC Stream: ${formData.pucStream}\nPUC Percentage: ${formData.pucPercentage}`,
-          };
-          
-          await emailjs.send(
-            'service_edupath',
-            'template_chatrequest',
-            templateParams,
-            'lcoIppQEnR3Y1wMdM'
-          );
-          
-          console.log('Registration notification email sent');
-        } catch (emailError) {
-          console.error('Error sending registration notification email:', emailError);
-          // Don't show this error to the user, just log it
+          await registerStudent(studentData);
+          apiSuccess = true;
+          console.log("API registration successful");
+        } catch (apiError) {
+          console.error("API registration failed:", apiError);
+          // Continue with email notification even if API fails
         }
         
-        toast({
-          title: "Registration Successful!",
-          description: "Thank you for registering. We will contact you with more information about your educational options.",
-        });
+        // Send notification email about new registration
+        const emailSent = await sendRegistrationEmail(studentData);
         
-        // Reset form
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-          phone: "",
-          school: "",
-          city: "",
-          state: "",
-          pucStream: "",
-          pucPercentage: "",
-          preferredDegree: "",
-          notes: "",
-          agreeToTerms: false,
-        });
+        if (apiSuccess || emailSent) {
+          toast({
+            title: "Registration Successful!",
+            description: "Thank you for registering. We will contact you with more information about your educational options.",
+          });
+          
+          // Reset form
+          setFormData({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            phone: "",
+            school: "",
+            city: "",
+            state: "",
+            pucStream: "",
+            pucPercentage: "",
+            preferredDegree: "",
+            notes: "",
+            agreeToTerms: false,
+          });
+        } else {
+          // Both API and email failed
+          toast({
+            title: "Network Issue",
+            description: "Please check your connection and try again later, or contact us directly.",
+            variant: "destructive",
+          });
+        }
       } catch (error) {
-        console.error("Registration failed:", error);
+        console.error("Registration process failed:", error);
         toast({
-          title: "Registration Failed",
-          description: "There was an error during registration. Please try again later.",
+          title: "Registration Issue",
+          description: "There was a problem with your registration. Please try again or contact support.",
           variant: "destructive",
         });
       } finally {

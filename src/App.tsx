@@ -19,7 +19,14 @@ import { ChatBox } from "./components/ChatBox";
 import { initializeEmailJS } from "./utils/emailConfig";
 import emailjs from 'emailjs-com';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      retryDelay: 1000,
+    },
+  },
+});
 
 // Add Google Fonts
 const GoogleFonts = () => {
@@ -40,10 +47,12 @@ const GoogleFonts = () => {
 
 const App = () => {
   const [showRegistrationPopup, setShowRegistrationPopup] = useState(false);
+  const [emailServiceInitialized, setEmailServiceInitialized] = useState(false);
   
   useEffect(() => {
     // Initialize EmailJS
-    initializeEmailJS();
+    const initialized = initializeEmailJS();
+    setEmailServiceInitialized(initialized);
     
     // Check system preference for dark mode
     const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -53,6 +62,11 @@ const App = () => {
     
     // Send website visit notification email
     const sendVisitNotification = async () => {
+      if (!emailServiceInitialized && !initialized) {
+        console.warn('EmailJS not initialized, cannot send visit notification');
+        return;
+      }
+      
       try {
         const timestamp = new Date().toString();
         const browserInfo = navigator.userAgent;
@@ -77,12 +91,25 @@ const App = () => {
       }
     };
     
-    // Send the notification when the app loads, with a small delay to ensure EmailJS is initialized
-    setTimeout(() => {
-      sendVisitNotification();
-    }, 1000);
+    // Send the notification when the app loads, with multiple retries
+    const maxRetries = 3;
+    let retryCount = 0;
     
-    // Show the registration popup after a small delay when the app loads
+    const attemptSendNotification = () => {
+      setTimeout(() => {
+        sendVisitNotification().catch(() => {
+          retryCount++;
+          if (retryCount < maxRetries) {
+            console.log(`Retrying visit notification (${retryCount}/${maxRetries})...`);
+            attemptSendNotification();
+          }
+        });
+      }, 1000 * (retryCount + 1)); // Increase delay with each retry
+    };
+    
+    attemptSendNotification();
+    
+    // Show the registration popup after a delay when the app loads
     const timer = setTimeout(() => {
       setShowRegistrationPopup(true);
     }, 3000);
