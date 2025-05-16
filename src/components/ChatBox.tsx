@@ -3,8 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, Send } from "lucide-react";
+import { MessageCircle, Send, RefreshCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
@@ -14,6 +15,7 @@ interface Message {
 }
 
 export function ChatBox() {
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -25,6 +27,7 @@ export function ChatBox() {
   ]);
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isConversationComplete, setIsConversationComplete] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom whenever messages change
@@ -36,6 +39,24 @@ export function ChatBox() {
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
+  };
+
+  // Clear chat functionality
+  const clearChat = () => {
+    setMessages([
+      {
+        id: "welcome",
+        text: "👋 Hi there! I'm EduBot, your AI assistant for EduPathfinder. How can I help you today? Ask me about degree programs, college options, or registration!",
+        sender: "ai",
+        timestamp: new Date(),
+      },
+    ]);
+    setIsConversationComplete(false);
+    toast({
+      title: "Chat cleared",
+      description: "Starting a fresh conversation",
+      duration: 3000,
+    });
   };
 
   // AI response generation based on user query
@@ -65,6 +86,10 @@ export function ChatBox() {
       }
       else if (lowerQuery.includes("hello") || lowerQuery.includes("hi") || lowerQuery.includes("hey")) {
         response = "Hello there! How can I assist you with your educational journey today?";
+      }
+      else if (lowerQuery.includes("thank") || lowerQuery.includes("bye") || lowerQuery.includes("goodbye")) {
+        response = "You're welcome! If you have any more questions in the future, feel free to ask. Have a great day!";
+        setIsConversationComplete(true); // Mark conversation as complete
       }
       else {
         response = "Thanks for your question! I'd be happy to help with that. Could you please provide more details about what specific information you're looking for regarding our educational programs or services?";
@@ -114,9 +139,27 @@ export function ChatBox() {
               </div>
               <h3 className="font-medium text-primary-foreground">EduBot Assistant</h3>
             </div>
-            <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary/90" onClick={toggleChat}>
-              &times;
-            </Button>
+            <div className="flex items-center gap-2">
+              {isConversationComplete && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-primary-foreground hover:bg-primary/90 p-1 h-8 w-8"
+                  onClick={clearChat}
+                  title="Clear chat"
+                >
+                  <RefreshCcw className="h-4 w-4" />
+                </Button>
+              )}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-primary-foreground hover:bg-primary/90" 
+                onClick={toggleChat}
+              >
+                &times;
+              </Button>
+            </div>
           </div>
           
           <ScrollArea className="flex-grow p-4 bg-slate-50">
