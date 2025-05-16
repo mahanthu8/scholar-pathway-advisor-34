@@ -23,6 +23,12 @@ const App = () => {
   const [showRegistrationPopup, setShowRegistrationPopup] = useState(false);
   
   useEffect(() => {
+    // Check system preference for dark mode
+    const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (prefersDarkMode) {
+      document.documentElement.classList.add("dark");
+    }
+    
     // Show the registration popup after a small delay when the app loads
     const timer = setTimeout(() => {
       setShowRegistrationPopup(true);

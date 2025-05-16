@@ -3,9 +3,10 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, Send, RefreshCcw } from "lucide-react";
+import { MessageCircle, Send, RefreshCcw, X, ChevronDown, Moon, Sun, Image } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Message {
   id: string;
@@ -29,6 +30,8 @@ export function ChatBox() {
   const [isTyping, setIsTyping] = useState(false);
   const [isConversationComplete, setIsConversationComplete] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
@@ -37,8 +40,27 @@ export function ChatBox() {
     }
   }, [messages]);
 
+  // Toggle theme effect
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
   const toggleChat = () => {
     setIsOpen(!isOpen);
+  };
+
+  // Collapse chat functionality
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
+  // Toggle theme functionality
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+    toast({
+      title: `${theme === "light" ? "Dark" : "Light"} mode activated`,
+      duration: 2000,
+    });
   };
 
   // Clear chat functionality
@@ -129,17 +151,40 @@ export function ChatBox() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-50 transition-all duration-300">
       {isOpen ? (
-        <div className="flex flex-col bg-white rounded-lg shadow-xl w-80 md:w-96 h-96 border border-gray-200 animate-fade-in">
+        <div className={cn(
+          "flex flex-col glass rounded-lg shadow-xl w-80 md:w-96 border-2 border-primary/20 transition-all duration-300 animate-fade-in",
+          isCollapsed ? "h-16" : "h-96"
+        )}>
           <div className="flex items-center justify-between bg-primary p-4 rounded-t-lg">
             <div className="flex items-center gap-2">
               <div className="bg-primary-foreground rounded-full p-1">
-                <MessageCircle className="h-5 w-5 text-primary" />
+                <MessageCircle className="h-5 w-5 text-primary animate-pulse-gentle" />
               </div>
               <h3 className="font-medium text-primary-foreground">EduBot Assistant</h3>
             </div>
             <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-primary-foreground hover:bg-primary/90 p-1 h-8 w-8"
+                onClick={toggleTheme}
+                title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              >
+                {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-primary-foreground hover:bg-primary/90 p-1 h-8 w-8"
+                onClick={toggleCollapse}
+                title={isCollapsed ? "Expand chat" : "Collapse chat"}
+              >
+                <ChevronDown className={cn("h-4 w-4 transition-transform", isCollapsed ? "rotate-180" : "")} />
+              </Button>
+              
               {isConversationComplete && (
                 <Button 
                   variant="ghost" 
@@ -151,63 +196,83 @@ export function ChatBox() {
                   <RefreshCcw className="h-4 w-4" />
                 </Button>
               )}
+              
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-primary-foreground hover:bg-primary/90" 
+                className="text-primary-foreground hover:bg-primary/90 p-1 h-8 w-8" 
                 onClick={toggleChat}
+                title="Close chat"
               >
-                &times;
+                <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
           
-          <ScrollArea className="flex-grow p-4 bg-slate-50">
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div 
-                  key={message.id} 
-                  className={cn(
-                    "max-w-[80%] p-3 rounded-lg shadow-sm",
-                    message.sender === "user" 
-                      ? "bg-primary text-primary-foreground ml-auto" 
-                      : "bg-white border border-gray-100 mr-auto"
+          {!isCollapsed && (
+            <>
+              <ScrollArea className="flex-grow p-4 bg-slate-50 dark:bg-slate-900/50">
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <div 
+                      key={message.id} 
+                      className={cn(
+                        "max-w-[80%] p-3 rounded-lg transition-all duration-300",
+                        message.sender === "user" 
+                          ? "bg-primary text-primary-foreground ml-auto shadow-md" 
+                          : "glass mr-auto border border-primary/10"
+                      )}
+                    >
+                      {message.text}
+                      <div className="text-xs opacity-70 mt-1 text-right">
+                        {message.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      </div>
+                    </div>
+                  ))}
+                  {isTyping && (
+                    <div className="glass p-3 rounded-lg max-w-[80%] mr-auto border border-primary/10">
+                      <div className="flex space-x-1">
+                        <div className="h-2 w-2 rounded-full bg-primary/60 animate-bounce"></div>
+                        <div className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                        <div className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{animationDelay: '0.4s'}}></div>
+                      </div>
+                    </div>
                   )}
-                >
-                  {message.text}
+                  <div ref={messagesEndRef} />
                 </div>
-              ))}
-              {isTyping && (
-                <div className="bg-white border border-gray-100 p-3 rounded-lg max-w-[80%] mr-auto shadow-sm">
-                  <div className="flex space-x-1">
-                    <div className="h-2 w-2 rounded-full bg-gray-300 animate-bounce"></div>
-                    <div className="h-2 w-2 rounded-full bg-gray-300 animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                    <div className="h-2 w-2 rounded-full bg-gray-300 animate-bounce" style={{animationDelay: '0.4s'}}></div>
-                  </div>
+              </ScrollArea>
+              
+              <form onSubmit={handleSendMessage} className="p-4 border-t border-primary/10 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-b-lg">
+                <div className="flex gap-2">
+                  <Input
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Ask me anything about your career or registration..."
+                    className="flex-grow glass"
+                  />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button type="button" variant="outline" size="icon" className="glass">
+                        <Image className="h-4 w-4 text-primary" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem className="cursor-pointer">Upload Image</DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer">Take Photo</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button type="submit" className="btn-gradient">
+                    <Send className="h-4 w-4" />
+                  </Button>
                 </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          </ScrollArea>
-          
-          <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-100 bg-white">
-            <div className="flex gap-2">
-              <Input
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Ask me anything about your career or registration..."
-                className="flex-grow shadow-sm"
-              />
-              <Button type="submit" size="icon" className="shadow-sm">
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
-          </form>
+              </form>
+            </>
+          )}
         </div>
       ) : (
         <Button
           onClick={toggleChat}
-          className="h-12 w-12 rounded-full shadow-lg"
+          className="h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 animate-float"
           size="icon"
         >
           <MessageCircle className="h-6 w-6" />
